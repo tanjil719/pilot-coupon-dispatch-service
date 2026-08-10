@@ -16,14 +16,6 @@ import java.util.TreeMap;
 
 import static com.pilotcoupondispatchservice.utils.SecurityUtil.getLoggedInUserPermission;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: ২৫/১১/২২
- * Time: ১০:৫০ PM
- * Email: mdshamim723@gmail.com
- */
-
 @Service
 public class PermissionServiceImpl implements PermissionService {
 

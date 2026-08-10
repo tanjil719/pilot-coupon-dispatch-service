@@ -10,14 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: ২৫/১১/২২
- * Time: ১০:৫০ PM
- * Email: mdshamim723@gmail.com
- */
-
 @Slf4j
 @Service
 @AllArgsConstructor

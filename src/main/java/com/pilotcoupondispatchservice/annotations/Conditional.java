@@ -8,14 +8,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: ৩/৫/২০
- * Time: ১১:৩৭ AM
- * Email: mdshamim723@gmail.com
- */
-
 @Repeatable(Conditionals.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

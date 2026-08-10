@@ -11,14 +11,6 @@ import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: ২৫/১১/২২
- * Time: ১০:৫০ PM
- * Email: mdshamim723@gmail.com
- */
-
 @Target(value = {FIELD, LOCAL_VARIABLE, PARAMETER, TYPE_USE})
 @Retention(value = RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = {ImageFileValidator.class})

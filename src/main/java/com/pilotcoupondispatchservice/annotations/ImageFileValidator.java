@@ -5,14 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: ২৫/১১/২২
- * Time: ১০:৫০ PM
- * Email: mdshamim723@gmail.com
- */
-
 public class ImageFileValidator implements ConstraintValidator<ValidImage, MultipartFile> {
 
     boolean required = true;

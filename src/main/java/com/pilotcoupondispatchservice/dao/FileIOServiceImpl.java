@@ -18,14 +18,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import org.springframework.util.StringUtils;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: ২৫/১১/২২
- * Time: ১০:৫০ PM
- * Email: mdshamim723@gmail.com
- */
-
 @Slf4j
 @Service
 public class FileIOServiceImpl implements FileIOService {

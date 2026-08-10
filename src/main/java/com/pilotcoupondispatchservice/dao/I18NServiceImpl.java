@@ -12,14 +12,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: ১/১২/২২
- * Time: ৮:০২ AM
- * Email: mdshamim723@gmail.com
- */
-
 @Slf4j
 @AllArgsConstructor
 @Service

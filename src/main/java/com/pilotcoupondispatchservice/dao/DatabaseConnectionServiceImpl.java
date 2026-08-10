@@ -8,13 +8,6 @@ import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: 2/27/25
- * Email: mdshamim723@gmail.com
- */
-
 @Slf4j
 @AllArgsConstructor
 @Service

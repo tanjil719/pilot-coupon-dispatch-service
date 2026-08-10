@@ -7,14 +7,6 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Md. Shamim
- * Date: ৩/৫/২০
- * Time: ১১:৪০ AM
- * Email: mdshamim723@gmail.com
- */
-
 @Slf4j
 public class ConditionalValidator implements ConstraintValidator<Conditional, Object> {
 

@@ -12,14 +12,7 @@
 //import jakarta.mail.internet.MimeMessage;
 //import java.util.Map;
 //
-///**
-// * Created by IntelliJ IDEA.
-// * User: Md. Shamim
-// * Date: ২৫/১১/২২
-// * Time: ১০:৫০ PM
-// * Email: mdshamim723@gmail.com
-// */
-//
+////
 //@Slf4j
 //@Service
 //@AllArgsConstructor
