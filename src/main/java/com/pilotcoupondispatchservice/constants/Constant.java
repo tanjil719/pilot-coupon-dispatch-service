@@ -14,7 +14,7 @@ public class Constant {
             PermissionConstant.CREATE_USER,
             PermissionConstant.MODIFY_USER,
             PermissionConstant.DELETE_USER,
-//            PermissionConstant.READ_ROLE,
+            PermissionConstant.READ_ROLE,
 //            PermissionConstant.CREATE_ROLE,
 //            PermissionConstant.MODIFY_ROLE,
 //            PermissionConstant.DELETE_ROLE,

@@ -26,22 +26,22 @@ public class AuthService {
 //    @Value("${spring.mail.username}")
 //    private String fromEmail;
 
-    private static final int OTP_EXPIRY_MINUTES = 10;
+//    private static final int OTP_EXPIRY_MINUTES = 10;
 
-//    public TokenPairResponse refreshToken(String refreshToken) {
-//        if (!jwtUtil.isTokenValid(refreshToken) || !jwtUtil.isRefreshToken(refreshToken)) {
-//            throw new InvalidAuthenticationException("Invalid refresh token");
-//        }
-//
-//        CustomPrincipal principal = jwtUtil.extractPrincipal(refreshToken);
-//        if (principal.userId() == null || principal.userId().isBlank()) {
-//            throw new InvalidAuthenticationException("Refresh token subject is invalid");
-//        }
-//
-//        String accessToken = jwtUtil.generateAccessToken(principal);
-//        String nextRefreshToken = jwtUtil.generateRefreshToken(principal);
-//        return new TokenPairResponse(accessToken, nextRefreshToken, "Bearer");
-//    }
+    public TokenPairResponse refreshToken(String refreshToken) {
+        if (!jwtUtil.isTokenValid(refreshToken) || !jwtUtil.isRefreshToken(refreshToken)) {
+            throw new InvalidAuthenticationException("Invalid refresh token");
+        }
+
+        CustomPrincipal principal = jwtUtil.extractPrincipal(refreshToken);
+        if (principal.getUserId() <= 0) {
+            throw new InvalidAuthenticationException("Refresh token subject is invalid");
+        }
+
+        String accessToken = jwtUtil.generateAccessToken(principal);
+        String nextRefreshToken = jwtUtil.generateRefreshToken(principal);
+        return new TokenPairResponse(accessToken, nextRefreshToken, "Bearer");
+    }
 
     public LoginResponse login(LoginRequest request) {
         User user = userService.findByEmail(request.getUsername());

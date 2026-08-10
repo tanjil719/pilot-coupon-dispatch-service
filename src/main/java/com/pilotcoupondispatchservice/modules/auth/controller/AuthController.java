@@ -24,11 +24,11 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping("${url.base}/public/auth/refresh")
-//    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
-//        TokenPairResponse response = authService.refreshToken(request.refreshToken());
-//        return ResponseEntity.ok(response);
-//    }
+    @PostMapping("${url.base}/public/auth/refresh")
+    public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
+        TokenPairResponse response = authService.refreshToken(request.refreshToken());
+        return ResponseEntity.ok(response);
+    }
 //
 //    @PostMapping("${url.base}/public/auth/contributor/request-signup-otp")
 //    public ResponseEntity<?> requestContributorSignupOtp(@Valid @RequestBody ContributorSignupRequest request) {
