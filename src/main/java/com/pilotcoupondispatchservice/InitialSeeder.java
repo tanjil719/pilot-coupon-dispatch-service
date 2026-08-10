@@ -1,15 +1,13 @@
 package com.pilotcoupondispatchservice;
 
-import com.pilotcoupondispatchservice.constants.PermissionConstant;
 import com.pilotcoupondispatchservice.dao.PermissionService;
-import com.pilotcoupondispatchservice.enums.RoleLevel;
+import com.pilotcoupondispatchservice.enums.UserType;
 import com.pilotcoupondispatchservice.modules.roles.entity.Role;
 import com.pilotcoupondispatchservice.modules.roles.repository.RoleRepository;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,8 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-import static com.pilotcoupondispatchservice.constants.Constant.ADMIN_PERMISSION_LIST;
-import static com.pilotcoupondispatchservice.constants.Constant.ADMIN_ROLE_ALIAS;
+import static com.pilotcoupondispatchservice.constants.Constant.*;
 
 /**
  * Database seeder for initial data setup on application startup.
@@ -70,17 +67,13 @@ public class InitialSeeder implements CommandLineRunner {
         }
 
         // OWNER Role
-//        if (!roleRepository.existsByAlias("OWNER")) {
-//            Role ownerRole = new Role();
-//            ownerRole.setAlias("OWNER");
-//            ownerRole.setRoleLevel(RoleLevel.OWNER);
-//            ownerRole.setPermission("");
-//            ownerRole.setPredefine(true);
-//            roleRepository.save(ownerRole);
-//            log.info("Created OWNER role");
-//        } else {
-//            log.info("OWNER role already exists");
-//        }
+        if (!roleRepository.existsByAlias("OWNER")) {
+            Role OWNER_ROLE = new Role(OWNER_ROLE_ALIAS, permissionService.generatePermission(Arrays.asList(OWNER_PERMISSION_LIST)), true);
+            roleRepository.save(OWNER_ROLE);
+            log.info("Created OWNER role");
+        } else {
+            log.info("OWNER role already exists");
+        }
     }
 
     private void seedAdminUser() {
@@ -104,6 +97,7 @@ public class InitialSeeder implements CommandLineRunner {
         adminUser.setPhone(adminPhone);
         adminUser.setPassword(passwordEncoder.encode(adminPassword));
         adminUser.setRole(adminRole);
+        adminUser.setUserType(UserType.ADMIN);
         adminUser.setIsActive(true);
 
         userRepository.save(adminUser);

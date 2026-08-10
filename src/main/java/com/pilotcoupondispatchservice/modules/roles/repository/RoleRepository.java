@@ -1,7 +1,6 @@
 package com.pilotcoupondispatchservice.modules.roles.repository;
 
 import com.pilotcoupondispatchservice.modules.roles.entity.Role;
-import com.pilotcoupondispatchservice.enums.RoleLevel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

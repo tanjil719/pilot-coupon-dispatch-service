@@ -2,8 +2,6 @@ package com.pilotcoupondispatchservice.modules.roles.controller;
 
 import com.pilotcoupondispatchservice.annotations.HasPermission;
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
-import com.pilotcoupondispatchservice.enums.RoleLevel;
-import com.pilotcoupondispatchservice.modules.roles.dto.PermissionDTO;
 import com.pilotcoupondispatchservice.modules.roles.dto.RoleDTO;
 import com.pilotcoupondispatchservice.modules.roles.entity.Role;
 import com.pilotcoupondispatchservice.modules.roles.service.RoleService;
@@ -14,9 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("${url.base}/secured/roles")
@@ -31,7 +26,7 @@ public class RoleController {
             @RequestParam(defaultValue = "") String alias,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
+
         Pageable pageable = PageRequest.of(page, size);
         Page<Role> roles = roleService.searchRole(alias, pageable);
         return ResponseEntity.ok(roles);

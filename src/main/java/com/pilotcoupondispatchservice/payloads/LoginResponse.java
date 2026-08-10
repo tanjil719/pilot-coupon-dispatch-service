@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginResponse {
-
     private TokenPairResponse token;
-    private User user;
+//    private User user;
 }

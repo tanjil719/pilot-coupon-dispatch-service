@@ -3,7 +3,6 @@ package com.pilotcoupondispatchservice.modules.roles.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pilotcoupondispatchservice.enums.RoleLevel;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,12 +1,8 @@
 package com.pilotcoupondispatchservice.dao;
 
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
-import com.pilotcoupondispatchservice.dto.PermissionDTO;
-import com.pilotcoupondispatchservice.enums.RoleLevel;
-import com.pilotcoupondispatchservice.modules.roles.entity.Role;
+
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface PermissionService<T> {
 

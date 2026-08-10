@@ -29,18 +29,18 @@ public class AuthController {
         TokenPairResponse response = authService.refreshToken(request.refreshToken());
         return ResponseEntity.ok(response);
     }
-//
-//    @PostMapping("${url.base}/public/auth/contributor/request-signup-otp")
-//    public ResponseEntity<?> requestContributorSignupOtp(@Valid @RequestBody ContributorSignupRequest request) {
-//        OtpResponse response = authService.requestContributorSignupOtp(request);
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @PostMapping("${url.base}/public/auth/contributor/verify-otp-and-signup")
-//    public ResponseEntity<?> verifyOtpAndSignup(@Valid @RequestBody OtpVerificationRequest request) {
-//        LoginResponse response = authService.verifyOtpAndSignup(request);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-//    }
+
+    @PostMapping("${url.base}/public/auth/owner/registraton")
+    public ResponseEntity<?> requestOwnerSignup(@Valid @RequestBody OwnerSignupRequest request) {
+        OtpResponse response = authService.requestOwnerSignup(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("${url.base}/public/auth/owner/verify-otp-and-signup")
+    public ResponseEntity<?> verifyOtpAndSignup(@Valid @RequestBody OtpVerificationRequest request) {
+        LoginResponse response = authService.verifyOtpAndSignup(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }
 
 

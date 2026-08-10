@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "otp_verification")
+@Table(name = "otp_verifications")
 public class OtpVerification implements Serializable {
 
     private static final long serialVersionUID = 1L;

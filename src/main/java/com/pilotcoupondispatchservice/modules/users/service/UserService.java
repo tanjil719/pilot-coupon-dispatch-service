@@ -2,7 +2,6 @@ package com.pilotcoupondispatchservice.modules.users.service;
 
 import com.pilotcoupondispatchservice.annotations.HasPermission;
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
-import com.pilotcoupondispatchservice.enums.RoleLevel;
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.repository.UserRepository;

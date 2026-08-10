@@ -3,11 +3,11 @@ package com.pilotcoupondispatchservice.modules.users.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pilotcoupondispatchservice.enums.RoleLevel;
+import com.pilotcoupondispatchservice.enums.UserType;
 import com.pilotcoupondispatchservice.modules.roles.entity.Role;
+
 import com.pilotcoupondispatchservice.utils.SecurityUtil;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +38,7 @@ public class User implements Serializable {
     @Column(nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(nullable = true, length = 20)
+    @Column(nullable = false, length = 20)
     private String phone;
 
     @JsonIgnore
@@ -48,6 +48,10 @@ public class User implements Serializable {
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private UserType userType;
 
     @Column(nullable = false)
     private Boolean isActive = true;

@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OtpResponse {
-
     private String message;
     private String email;
     private String status;

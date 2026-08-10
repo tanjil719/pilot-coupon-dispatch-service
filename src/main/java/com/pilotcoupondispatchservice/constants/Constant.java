@@ -20,4 +20,15 @@ public class Constant {
 //            PermissionConstant.DELETE_ROLE,
     };
 
+    public static final PermissionConstant[] OWNER_PERMISSION_LIST = {
+            PermissionConstant.READ_USER,
+            PermissionConstant.CREATE_USER,
+            PermissionConstant.MODIFY_USER,
+            PermissionConstant.DELETE_USER,
+            PermissionConstant.READ_ROLE,
+//            PermissionConstant.CREATE_ROLE,
+//            PermissionConstant.MODIFY_ROLE,
+//            PermissionConstant.DELETE_ROLE,
+    };
+
 }
