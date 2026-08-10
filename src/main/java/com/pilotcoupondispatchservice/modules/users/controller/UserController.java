@@ -2,9 +2,7 @@ package com.pilotcoupondispatchservice.modules.users.controller;
 
 import com.pilotcoupondispatchservice.annotations.HasPermission;
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
-import com.pilotcoupondispatchservice.modules.users.dto.ContributorDTO;
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
-import com.pilotcoupondispatchservice.modules.users.entity.Contributor;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.service.UserService;
 import lombok.AllArgsConstructor;
@@ -16,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("${url.base}/secured/users")
 @AllArgsConstructor
 public class UserController {
 
@@ -41,21 +39,21 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping
-    @HasPermission(permission = PermissionConstant.CREATE_USER)
-    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
-        User user = userService.createUser(userDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
-    }
+//    @PostMapping
+//    @HasPermission(permission = PermissionConstant.CREATE_USER)
+//    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
+//        User user = userService.createUser(userDTO);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+//    }
 
-    @PutMapping("/{id}")
-    @HasPermission(permission = PermissionConstant.MODIFY_USER)
-    public ResponseEntity<?> updateUser(
-            @PathVariable Long id,
-            @RequestBody UserDTO userDTO) {
-        User user = userService.updateUser(userDTO, id);
-        return ResponseEntity.ok(user);
-    }
+//    @PutMapping("/{id}")
+//    @HasPermission(permission = PermissionConstant.MODIFY_USER)
+//    public ResponseEntity<?> updateUser(
+//            @PathVariable Long id,
+//            @RequestBody UserDTO userDTO) {
+//        User user = userService.updateUser(userDTO, id);
+//        return ResponseEntity.ok(user);
+//    }
 
     @DeleteMapping("/{id}")
     @HasPermission(permission = PermissionConstant.DELETE_USER)
@@ -87,26 +85,5 @@ public class UserController {
             @RequestParam String newPassword) {
         userService.updateUserPassword(id, newPassword);
         return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{userId}/make-contributor")
-    @HasPermission(permission = PermissionConstant.CREATE_CONTRIBUTOR)
-    public ResponseEntity<?> makeUserContributor(@PathVariable Long userId) {
-        Contributor contributor = userService.createContributor(userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(contributor);
-    }
-
-    @PostMapping("/contributors/{contributorId}/approve")
-    @HasPermission(permission = PermissionConstant.APPROVE_CONTRIBUTOR)
-    public ResponseEntity<?> approveContributor(@PathVariable Long contributorId) {
-        Contributor contributor = userService.approveContributor(contributorId);
-        return ResponseEntity.ok(contributor);
-    }
-
-    @PostMapping("/contributors/{contributorId}/ban")
-    @HasPermission(permission = PermissionConstant.BAN_CONTRIBUTOR)
-    public ResponseEntity<?> banContributor(@PathVariable Long contributorId) {
-        Contributor contributor = userService.banContributor(contributorId);
-        return ResponseEntity.ok(contributor);
     }
 }

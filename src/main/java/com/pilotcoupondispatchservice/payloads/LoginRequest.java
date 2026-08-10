@@ -14,8 +14,8 @@ import lombok.ToString;
 @ToString(exclude = "password")
 public class LoginRequest {
 
-    @NotBlank(message = "Email must not be blank")
-    private String email;
+    @NotBlank(message = "User-name must not be blank")
+    private String username;
 
     @NotBlank(message = "Password must not be blank")
     private String password;

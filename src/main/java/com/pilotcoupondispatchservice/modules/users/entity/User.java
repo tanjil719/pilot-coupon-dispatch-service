@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pilotcoupondispatchservice.enums.RoleLevel;
+import com.pilotcoupondispatchservice.modules.roles.entity.Role;
+import com.pilotcoupondispatchservice.utils.SecurityUtil;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +23,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 @Getter
 @Setter
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email"),
-        @UniqueConstraint(columnNames = "phone")
-})
+@Table(name = "users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -35,19 +35,19 @@ public class User implements Serializable {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = true, length = 20)
     private String phone;
 
     @JsonIgnore
     @Column(nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private RoleLevel role;
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
     @Column(nullable = false)
     private Boolean isActive = true;
@@ -61,10 +61,16 @@ public class User implements Serializable {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
 
+    @JsonProperty(access = READ_ONLY)
+    private long createdBy;
+    @JsonProperty(access = READ_ONLY)
+    private long updatedBy;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.createdBy = SecurityUtil.getLoggedInUserId();
         if (this.isActive == null) {
             this.isActive = true;
         }
@@ -73,5 +79,6 @@ public class User implements Serializable {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+        this.updatedBy = SecurityUtil.getLoggedInUserId();
     }
 }

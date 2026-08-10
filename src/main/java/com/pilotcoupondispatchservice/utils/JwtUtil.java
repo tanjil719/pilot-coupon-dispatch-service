@@ -1,5 +1,6 @@
 package com.pilotcoupondispatchservice.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pilotcoupondispatchservice.config.JwtProperties;
 import com.pilotcoupondispatchservice.payloads.CustomPrincipal;
 import io.jsonwebtoken.Claims;
@@ -35,11 +36,8 @@ public class JwtUtil {
 
     public String generateAccessToken(CustomPrincipal principal) {
         return Jwts.builder()
-                .id(UUID.randomUUID().toString())
-                .subject(principal.userId())
-                .claim("email", principal.email())
-                .claim("fullName", principal.fullName())
-                .claim("role", principal.role())
+                .claim("CURRENT_USER", principal)
+                .setSubject(principal.getEmail())
                 .claim(TOKEN_TYPE_CLAIM, ACCESS_TOKEN_TYPE)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration().toMillis()))
@@ -49,11 +47,8 @@ public class JwtUtil {
 
     public String generateRefreshToken(CustomPrincipal principal) {
         return Jwts.builder()
-                .id(UUID.randomUUID().toString())
-                .subject(principal.userId())
-                .claim("email", principal.email())
-                .claim("fullName", principal.fullName())
-                .claim("role", principal.role())
+                .claim("CURRENT_USER", principal)
+                .setSubject(principal.getEmail())
                 .claim(TOKEN_TYPE_CLAIM, REFRESH_TOKEN_TYPE)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiration().toMillis()))
@@ -62,13 +57,7 @@ public class JwtUtil {
     }
 
     public CustomPrincipal extractPrincipal(String token) {
-        var claims = extractAllClaims(token);
-        return new CustomPrincipal(
-                claims.getSubject(),
-                claims.get("email", String.class),
-                claims.get("fullName", String.class),
-                claims.get("role", String.class)
-        );
+        return new ObjectMapper().convertValue(extractAllClaims(token).get("CURRENT_USER"), CustomPrincipal.class);
     }
 
     public String extractUserId(String token) {

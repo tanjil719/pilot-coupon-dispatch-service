@@ -1,11 +1,16 @@
 package com.pilotcoupondispatchservice.payloads;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public record CustomPrincipal(
-        String userId,
-        String email,
-        String fullName,
-        String role
-) {}
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+public class CustomPrincipal {
+
+    private long userId;
+    private String email;
+    private String name;
+    private String permissionString;
+}

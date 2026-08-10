@@ -1,5 +1,7 @@
 package com.pilotcoupondispatchservice;
 
+import com.pilotcoupondispatchservice.constants.PermissionConstant;
+import com.pilotcoupondispatchservice.dao.PermissionService;
 import com.pilotcoupondispatchservice.enums.RoleLevel;
 import com.pilotcoupondispatchservice.modules.roles.entity.Role;
 import com.pilotcoupondispatchservice.modules.roles.repository.RoleRepository;
@@ -7,10 +9,16 @@ import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+
+import static com.pilotcoupondispatchservice.constants.Constant.ADMIN_PERMISSION_LIST;
+import static com.pilotcoupondispatchservice.constants.Constant.ADMIN_ROLE_ALIAS;
 
 /**
  * Database seeder for initial data setup on application startup.
@@ -24,6 +32,7 @@ public class InitialSeeder implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PermissionService permissionService;
 
     @Value("${ADMIN_NAME:Admin User}")
     private String adminName;
@@ -53,42 +62,25 @@ public class InitialSeeder implements CommandLineRunner {
 
         // ADMIN Role
         if (!roleRepository.existsByAlias("ADMIN")) {
-            Role adminRole = new Role();
-            adminRole.setAlias("ADMIN");
-            adminRole.setRoleLevel(RoleLevel.ADMIN);
-            adminRole.setPermission("*"); // All permissions
-            adminRole.setPredefine(true);
-            roleRepository.save(adminRole);
+            Role ADMIN_ROLE = new Role(ADMIN_ROLE_ALIAS, permissionService.generatePermission(Arrays.asList(ADMIN_PERMISSION_LIST)), true);
+            roleRepository.save(ADMIN_ROLE);
             log.info("Created ADMIN role");
         } else {
             log.info("ADMIN role already exists");
         }
 
-        // CONTRIBUTOR Role
-        if (!roleRepository.existsByAlias("CONTRIBUTOR")) {
-            Role contributorRole = new Role();
-            contributorRole.setAlias("CONTRIBUTOR");
-            contributorRole.setRoleLevel(RoleLevel.CONTRIBUTOR);
-            contributorRole.setPermission("train:create,train:update,train:read");
-            contributorRole.setPredefine(true);
-            roleRepository.save(contributorRole);
-            log.info("Created CONTRIBUTOR role");
-        } else {
-            log.info("CONTRIBUTOR role already exists");
-        }
-
-        // CONSUMER Role
-        if (!roleRepository.existsByAlias("CONSUMER")) {
-            Role consumerRole = new Role();
-            consumerRole.setAlias("CONSUMER");
-            consumerRole.setRoleLevel(RoleLevel.CONSUMER);
-            consumerRole.setPermission("train:read");
-            consumerRole.setPredefine(true);
-            roleRepository.save(consumerRole);
-            log.info("Created CONSUMER role");
-        } else {
-            log.info("CONSUMER role already exists");
-        }
+        // OWNER Role
+//        if (!roleRepository.existsByAlias("OWNER")) {
+//            Role ownerRole = new Role();
+//            ownerRole.setAlias("OWNER");
+//            ownerRole.setRoleLevel(RoleLevel.OWNER);
+//            ownerRole.setPermission("");
+//            ownerRole.setPredefine(true);
+//            roleRepository.save(ownerRole);
+//            log.info("Created OWNER role");
+//        } else {
+//            log.info("OWNER role already exists");
+//        }
     }
 
     private void seedAdminUser() {
@@ -104,15 +96,17 @@ public class InitialSeeder implements CommandLineRunner {
             return;
         }
 
+        Role adminRole = roleRepository.findByAlias("ADMIN").get();
+
         User adminUser = new User();
         adminUser.setName(adminName);
         adminUser.setEmail(adminEmail);
         adminUser.setPhone(adminPhone);
         adminUser.setPassword(passwordEncoder.encode(adminPassword));
-        adminUser.setRole(RoleLevel.ADMIN);
+        adminUser.setRole(adminRole);
         adminUser.setIsActive(true);
 
         userRepository.save(adminUser);
-        log.info("Created admin user with email: {} and phone: {}", adminEmail, adminPhone);
+        log.info("Created admin user with email: {} and phone: {}", adminEmail);
     }
 }

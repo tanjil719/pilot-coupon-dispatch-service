@@ -8,22 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface PermissionService {
+public interface PermissionService<T> {
 
     public boolean hasAccessPermission(PermissionConstant permissionConstant);
 
-    public Set<PermissionConstant> getAccessiblePermissionList(String permission);
+//    public Set<PermissionConstant> getAccessiblePermissionList(String permission);
+//
+//    public Set<PermissionConstant> getAccessiblePermissionList(List<Role> roles);
+//
+//    public Set<String> getNameOfAccessiblePermissionList(List<Role> roles);
 
-    public Set<PermissionConstant> getAccessiblePermissionList(List<Role> roles);
-
-    public Set<String> getNameOfAccessiblePermissionList(List<Role> roles);
-
-//    public String generatePermission(List<PermissionConstant> permissionConstants);
-
-    public String generatePermission(List<PermissionConstant> permissionConstants, RoleLevel roleLevel);
-
-    public Map<String, List<PermissionDTO>> getModuleBasePermissionListFromPermission(String permission, RoleLevel roleLevel);
-
-    public Map<String, List<PermissionDTO>> getAllModuleBasePermissionList(RoleLevel roleLevel);
+    public String generatePermission(List<PermissionConstant> permissionConstants);
 
 }

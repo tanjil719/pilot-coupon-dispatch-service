@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("${url.base}/secured/roles")
 @AllArgsConstructor
 public class RoleController {
 
@@ -37,12 +37,12 @@ public class RoleController {
         return ResponseEntity.ok(roles);
     }
 
-    @GetMapping("/{id}")
-    @HasPermission(permission = PermissionConstant.READ_ROLE)
-    public ResponseEntity<?> getRoleById(@PathVariable Long id) {
-        Map<String, Object> role = roleService.findRoleById(id);
-        return ResponseEntity.ok(role);
-    }
+//    @GetMapping("/{id}")
+//    @HasPermission(permission = PermissionConstant.READ_ROLE)
+//    public ResponseEntity<?> getRoleById(@PathVariable Long id) {
+//        Map<String, Object> role = roleService.findRoleById(id);
+//        return ResponseEntity.ok(role);
+//    }
 
     @PostMapping
     @HasPermission(permission = PermissionConstant.CREATE_ROLE)
@@ -51,14 +51,14 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(role);
     }
 
-    @PutMapping("/{id}")
-    @HasPermission(permission = PermissionConstant.MODIFY_ROLE)
-    public ResponseEntity<?> updateRole(
-            @PathVariable Long id,
-            @RequestBody RoleDTO roleDTO) {
-        Role role = roleService.updateRole(roleDTO, id);
-        return ResponseEntity.ok(role);
-    }
+//    @PutMapping("/{id}")
+//    @HasPermission(permission = PermissionConstant.MODIFY_ROLE)
+//    public ResponseEntity<?> updateRole(
+//            @PathVariable Long id,
+//            @RequestBody RoleDTO roleDTO) {
+//        Role role = roleService.updateRole(roleDTO, id);
+//        return ResponseEntity.ok(role);
+//    }
 
     @DeleteMapping("/{id}")
     @HasPermission(permission = PermissionConstant.DELETE_ROLE)
@@ -67,11 +67,11 @@ public class RoleController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/permissions/{roleLevel}")
-    @HasPermission(permission = PermissionConstant.READ_PERMISSION)
-    public ResponseEntity<?> getPermissions(
-            @PathVariable RoleLevel roleLevel) {
-        Map<String, List<PermissionDTO>> permissions = roleService.findAllModuleBasePermission(roleLevel);
-        return ResponseEntity.ok(permissions);
-    }
+//    @GetMapping("/permissions/{roleLevel}")
+//    @HasPermission(permission = PermissionConstant.READ_PERMISSION)
+//    public ResponseEntity<?> getPermissions(
+//            @PathVariable RoleLevel roleLevel) {
+//        Map<String, List<PermissionDTO>> permissions = roleService.findAllModuleBasePermission(roleLevel);
+//        return ResponseEntity.ok(permissions);
+//    }
 }

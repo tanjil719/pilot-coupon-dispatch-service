@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class HasPermissionAspect {
 
     private final PermissionService permissionService;
-    private final I18NService i18NService;
+//    private final I18NService i18NService;
 
     @Pointcut(value = "@annotation(permission)")
     public void callAt(HasPermission permission) {
@@ -29,9 +29,10 @@ public class HasPermissionAspect {
 
         if (!permissionService.hasAccessPermission(permission.permission())) {
             log.info(joinPoint.getSignature().toShortString() + " Permission Denied.");
-            throw new PermissionDeniedException(i18NService.getMessage("error.permission_denied"));
+            throw new PermissionDeniedException("Access Denied. Required Permission: " + permission.permission().getValue());
         }
 
         return joinPoint.proceed();
     }
 }
+

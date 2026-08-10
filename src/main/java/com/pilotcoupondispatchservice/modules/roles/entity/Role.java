@@ -18,9 +18,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 @Setter
 @ToString
 @Entity
-@Table(name = "roles", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "alias")
-})
+@Table(name = "roles")
 public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,10 +32,6 @@ public class Role implements Serializable {
 
     @JsonProperty(access = READ_ONLY)
     private boolean predefine = false;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private RoleLevel roleLevel;
 
     @JsonIgnore
     @Column(nullable = false, length = 1000)
@@ -59,6 +53,12 @@ public class Role implements Serializable {
     @JsonProperty(access = READ_ONLY)
     @Column(length = 100)
     private String updatedBy;
+
+    public Role(String adminRoleAlias, String s, boolean b) {
+        this.alias = adminRoleAlias;
+        this.permission = s;
+        this.predefine = b;
+    }
 
     @PrePersist
     public void prePersist() {
