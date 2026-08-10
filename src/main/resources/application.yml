@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: pilot-coupon-dispatch-service
+  profiles:
+    default: dev
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      validation-timeout: 5000
+      connection-test-query: SELECT 1
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        jdbc:
+          time_zone: UTC
+  jackson:
+    time-zone: UTC
+    datatype:
+      datetime:
+        WRITE_DATES_AS_TIMESTAMPS: false
+#  mail:
+#    host: ${MAIL_HOST:smtp.gmail.com}
+#    port: ${MAIL_PORT:587}
+#    username: ${MAIL_USERNAME}
+#    password: ${MAIL_PASSWORD}
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#            required: true
+#          connectiontimeout: 5000
+#          timeout: 5000
+#          writetimeout: 5000
+
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+  compression:
+    enabled: true
+    min-response-size: 1024
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when_authorized
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: ${JWT_ACCESS_EXPIRATION:PT1H}
+  refresh-token-expiration: ${JWT_REFRESH_EXPIRATION:P7D}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+
+url:
+  version: 1.0.0
+  base: '/api/${url.version}'
+  secured: '/api/${url.version}/secured'
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    show-extensions: true
+    filter: false
+  use-fqn: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
