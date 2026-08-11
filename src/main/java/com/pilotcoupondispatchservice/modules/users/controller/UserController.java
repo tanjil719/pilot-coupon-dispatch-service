@@ -1,7 +1,5 @@
 package com.pilotcoupondispatchservice.modules.users.controller;
 
-import com.pilotcoupondispatchservice.annotations.HasPermission;
-import com.pilotcoupondispatchservice.constants.PermissionConstant;
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.service.UserService;
@@ -21,7 +19,6 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/search")
-    @HasPermission(permission = PermissionConstant.READ_USER)
     public ResponseEntity<?> searchUsers(
             @RequestParam(defaultValue = "") String name,
             @RequestParam(defaultValue = "0") int page,
@@ -33,7 +30,6 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @HasPermission(permission = PermissionConstant.READ_USER)
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
@@ -56,21 +52,18 @@ public class UserController {
 //    }
 
     @DeleteMapping("/{id}")
-    @HasPermission(permission = PermissionConstant.DELETE_USER)
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/profile")
-    @HasPermission(permission = PermissionConstant.READ_USER_PROFILE)
     public ResponseEntity<?> getUserProfile(@PathVariable Long id) {
         User user = userService.getUserProfile(id);
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}/profile")
-    @HasPermission(permission = PermissionConstant.MODIFY_USER_PROFILE)
     public ResponseEntity<?> updateUserProfile(
             @PathVariable Long id,
             @RequestBody UserDTO userDTO) {
@@ -79,7 +72,6 @@ public class UserController {
     }
 
     @PostMapping("/{id}/change-password")
-    @HasPermission(permission = PermissionConstant.UPDATE_USER_PROFILE_PASSWORD)
     public ResponseEntity<?> updateUserPassword(
             @PathVariable Long id,
             @RequestParam String newPassword) {

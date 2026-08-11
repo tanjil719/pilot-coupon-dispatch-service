@@ -1,7 +1,5 @@
 package com.pilotcoupondispatchservice.modules.roles.controller;
 
-import com.pilotcoupondispatchservice.annotations.HasPermission;
-import com.pilotcoupondispatchservice.constants.PermissionConstant;
 import com.pilotcoupondispatchservice.modules.roles.dto.RoleDTO;
 import com.pilotcoupondispatchservice.modules.roles.entity.Role;
 import com.pilotcoupondispatchservice.modules.roles.service.RoleService;
@@ -21,7 +19,6 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping("/search")
-    @HasPermission(permission = PermissionConstant.READ_ROLE)
     public ResponseEntity<?> searchRoles(
             @RequestParam(defaultValue = "") String alias,
             @RequestParam(defaultValue = "0") int page,
@@ -40,7 +37,6 @@ public class RoleController {
 //    }
 
     @PostMapping
-    @HasPermission(permission = PermissionConstant.CREATE_ROLE)
     public ResponseEntity<?> createRole(@RequestBody RoleDTO roleDTO) {
         Role role = roleService.createRole(roleDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(role);
@@ -56,7 +52,6 @@ public class RoleController {
 //    }
 
     @DeleteMapping("/{id}")
-    @HasPermission(permission = PermissionConstant.DELETE_ROLE)
     public ResponseEntity<?> deleteRole(@PathVariable Long id) {
         roleService.deleteRole(id);
         return ResponseEntity.noContent().build();

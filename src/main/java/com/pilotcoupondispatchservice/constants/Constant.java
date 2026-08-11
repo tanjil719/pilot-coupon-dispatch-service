@@ -18,6 +18,8 @@ public class Constant {
 //            PermissionConstant.CREATE_ROLE,
 //            PermissionConstant.MODIFY_ROLE,
 //            PermissionConstant.DELETE_ROLE,
+            PermissionConstant.VEHICLE_VIEW_ALL,
+            PermissionConstant.VEHICLE_REVIEW,
     };
 
     public static final PermissionConstant[] OWNER_PERMISSION_LIST = {
@@ -29,6 +31,10 @@ public class Constant {
 //            PermissionConstant.CREATE_ROLE,
 //            PermissionConstant.MODIFY_ROLE,
 //            PermissionConstant.DELETE_ROLE,
+            PermissionConstant.VEHICLE_CREATE,
+            PermissionConstant.VEHICLE_VIEW_OWN,
+            PermissionConstant.VEHICLE_UPDATE,
+            PermissionConstant.VEHICLE_DELETE,
     };
 
 }
