@@ -67,6 +67,7 @@ public class User implements Serializable {
 
     @JsonProperty(access = READ_ONLY)
     private long createdBy;
+
     @JsonProperty(access = READ_ONLY)
     private long updatedBy;
 

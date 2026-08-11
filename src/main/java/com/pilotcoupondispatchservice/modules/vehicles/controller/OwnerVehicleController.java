@@ -2,9 +2,8 @@ package com.pilotcoupondispatchservice.modules.vehicles.controller;
 
 import com.pilotcoupondispatchservice.enums.VehicleStatus;
 import com.pilotcoupondispatchservice.enums.VehicleType;
-import com.pilotcoupondispatchservice.modules.vehicles.dto.VehicleCreateRequest;
+import com.pilotcoupondispatchservice.modules.vehicles.dto.VehicleRequest;
 import com.pilotcoupondispatchservice.modules.vehicles.dto.VehicleResponse;
-import com.pilotcoupondispatchservice.modules.vehicles.dto.VehicleUpdateRequest;
 import com.pilotcoupondispatchservice.modules.vehicles.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ public class OwnerVehicleController {
     private final VehicleService vehicleService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createVehicle(@Valid @RequestBody VehicleCreateRequest request) {
+    public ResponseEntity<?> createVehicle(@Valid @RequestBody VehicleRequest request) {
         VehicleResponse response = vehicleService.createVehicle(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -51,7 +50,7 @@ public class OwnerVehicleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleUpdateRequest request) {
+    public ResponseEntity<?> updateVehicle(@PathVariable Long id, @Valid @RequestBody VehicleRequest request) {
         VehicleResponse response = vehicleService.updateVehicle(id, request);
         return ResponseEntity.ok(response);
     }

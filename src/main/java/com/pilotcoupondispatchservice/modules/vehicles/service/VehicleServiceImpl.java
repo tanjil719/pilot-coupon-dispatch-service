@@ -35,7 +35,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     @HasPermission(permission = PermissionConstant.VEHICLE_CREATE)
-    public VehicleResponse createVehicle(VehicleCreateRequest request) {
+    public VehicleResponse createVehicle(VehicleRequest request) {
         String registrationNo = normalizeRegistrationNo(request.getRegistrationNo());
 
         if (vehicleRepository.existsByRegistrationNoIgnoreCase(registrationNo)) {
@@ -84,7 +84,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     @HasPermission(permission = PermissionConstant.VEHICLE_UPDATE)
-    public VehicleResponse updateVehicle(Long id, VehicleUpdateRequest request) {
+    public VehicleResponse updateVehicle(Long id, VehicleRequest request) {
         Vehicle vehicle = findByIdAndOwnerId(id);
 
         if (!vehicle.getActive()) {

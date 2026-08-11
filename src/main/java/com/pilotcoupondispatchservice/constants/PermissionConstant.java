@@ -37,7 +37,15 @@ public enum PermissionConstant {
     VEHICLE_UPDATE("Update Vehicle", "VEHICLE_UPDATE", "Vehicle-Module", "Update own vehicle."),
     VEHICLE_DELETE("Delete Vehicle", "VEHICLE_DELETE", "Vehicle-Module", "Soft delete own vehicle."),
     VEHICLE_VIEW_ALL("View All Vehicles", "VEHICLE_VIEW_ALL", "Vehicle-Module", "View all vehicles."),
-    VEHICLE_REVIEW("Review Vehicle", "VEHICLE_REVIEW", "Vehicle-Module", "Approve or reject a pending vehicle.");
+    VEHICLE_REVIEW("Review Vehicle", "VEHICLE_REVIEW", "Vehicle-Module", "Approve or reject a pending vehicle."),
+
+    /* ============ Route ===========*/
+    ROUTE_CREATE("Create Route", "ROUTE_CREATE", "Route-Module", "Create a route."),
+    ROUTE_UPDATE("Update Route", "ROUTE_UPDATE", "Route-Module", "Update a route."),
+    ROUTE_DELETE("Delete Route", "ROUTE_DELETE", "Route-Module", "Soft delete a route."),
+    ROUTE_VIEW_ALL("View All Routes", "ROUTE_VIEW_ALL", "Route-Module", "View all routes, including inactive ones."),
+    ROUTE_CHANGE_STATUS("Change Route Status", "ROUTE_CHANGE_STATUS", "Route-Module", "Activate or deactivate a route."),
+    ROUTE_VIEW("View Route", "ROUTE_VIEW", "Route-Module", "View active routes.");
 
 
     private final String value;
