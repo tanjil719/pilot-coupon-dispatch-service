@@ -59,7 +59,16 @@ public enum PermissionConstant {
     COUPON_REQUEST_REJECT("Reject Coupon Request", "COUPON_REQUEST_REJECT", "Coupon-Module", "Reject a pending coupon request."),
     COUPON_VIEW_ALL("View All Coupons", "COUPON_VIEW_ALL", "Coupon-Module", "View all coupons."),
     COUPON_CANCEL("Cancel Coupon", "COUPON_CANCEL", "Coupon-Module", "Cancel an unused coupon."),
-    COUPON_UPDATE("Update Coupon", "COUPON_UPDATE", "Coupon-Module", "Update the amount and expiry of an unused coupon.");
+    COUPON_UPDATE("Update Coupon", "COUPON_UPDATE", "Coupon-Module", "Update the amount and expiry of an unused coupon."),
+
+    /* ============ Booking ===========*/
+    BOOKING_CREATE("Create Booking", "BOOKING_CREATE", "Booking-Module", "Create a booking against an approved vehicle and an active coupon."),
+    BOOKING_VIEW_OWN("View Own Bookings", "BOOKING_VIEW_OWN", "Booking-Module", "View own bookings."),
+    BOOKING_CANCEL("Cancel Booking", "BOOKING_CANCEL", "Booking-Module", "Cancel own pending booking."),
+    BOOKING_VIEW_ALL("View All Bookings", "BOOKING_VIEW_ALL", "Booking-Module", "View all bookings."),
+    BOOKING_STATUS_UPDATE("Update Booking Status", "BOOKING_STATUS_UPDATE", "Booking-Module", "Approve or reject a pending booking."),
+    BOOKING_COMPLETE("Complete Booking", "BOOKING_COMPLETE", "Booking-Module", "Start or complete an in-progress booking."),
+    BOOKING_ASSIGN_PILOT("Assign Pilot", "BOOKING_ASSIGN_PILOT", "Booking-Module", "Assign a pilot to a booking on approval.");
 
 
     private final String value;

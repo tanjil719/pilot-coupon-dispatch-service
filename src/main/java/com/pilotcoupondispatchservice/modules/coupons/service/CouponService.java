@@ -1,12 +1,7 @@
 package com.pilotcoupondispatchservice.modules.coupons.service;
 
 import com.pilotcoupondispatchservice.enums.CouponStatus;
-import com.pilotcoupondispatchservice.modules.coupons.dto.CouponAdminResponse;
-import com.pilotcoupondispatchservice.modules.coupons.dto.CouponCancelRequest;
-import com.pilotcoupondispatchservice.modules.coupons.dto.CouponIssueRequest;
-import com.pilotcoupondispatchservice.modules.coupons.dto.CouponManualIssueRequest;
-import com.pilotcoupondispatchservice.modules.coupons.dto.CouponResponse;
-import com.pilotcoupondispatchservice.modules.coupons.dto.CouponUpdateRequest;
+import com.pilotcoupondispatchservice.modules.coupons.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,6 +19,8 @@ public interface CouponService {
     CouponAdminResponse issueCouponForRequest(Long requestId, CouponIssueRequest request);
 
     CouponAdminResponse manualIssueCoupon(CouponManualIssueRequest request);
+
+//    CouponAdminResponse issueRefundCoupon(Long ownerId, Double amount, Long refundOfBookingId);
 
     Page<CouponAdminResponse> listAllCoupons(CouponStatus status, Long ownerId, LocalDateTime from, LocalDateTime to, String search, Pageable pageable);
 

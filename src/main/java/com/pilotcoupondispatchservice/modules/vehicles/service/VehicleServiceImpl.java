@@ -2,11 +2,13 @@ package com.pilotcoupondispatchservice.modules.vehicles.service;
 
 import com.pilotcoupondispatchservice.annotations.HasPermission;
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
+import com.pilotcoupondispatchservice.enums.BookingStatus;
 import com.pilotcoupondispatchservice.enums.VehicleStatus;
 import com.pilotcoupondispatchservice.enums.VehicleType;
 import com.pilotcoupondispatchservice.exceptions.InvalidRequestException;
 import com.pilotcoupondispatchservice.exceptions.ResourceAlreadyExistException;
 import com.pilotcoupondispatchservice.exceptions.ResourceNotFoundException;
+import com.pilotcoupondispatchservice.modules.bookings.repository.BookingRepository;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.repository.UserRepository;
 import com.pilotcoupondispatchservice.modules.vehicles.dto.*;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -32,6 +35,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     private final VehicleRepository vehicleRepository;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     @HasPermission(permission = PermissionConstant.VEHICLE_CREATE)
@@ -121,10 +125,10 @@ public class VehicleServiceImpl implements VehicleService {
             return false;
         }
 
-        // TODO(next-module): block soft delete while an active booking references this vehicle.
-        // if (bookingRepository.existsByVehicleIdAndStatusIn(vehicle.getId(), Booking.ACTIVE_STATUSES)) {
-        //     throw new InvalidRequestException("VEHICLE_IN_USE: Cannot delete vehicle referenced by an active booking");
-        // }
+        // Only an APPROVED booking occupies the vehicle's schedule (mirrors BookingServiceImpl's overlap check).
+        if (bookingRepository.existsByVehicleIdAndStatusIn(vehicle.getId(), List.of(BookingStatus.APPROVED))) {
+            throw new InvalidRequestException("VEHICLE_IN_USE: Cannot delete vehicle referenced by an active booking");
+        }
 
         vehicle.setActive(false);
         vehicleRepository.save(vehicle);
