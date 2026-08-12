@@ -1,5 +1,6 @@
 package com.pilotcoupondispatchservice.modules.users.repository;
 
+import com.pilotcoupondispatchservice.enums.UserType;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     boolean existsByPhone(String phone);
+
+    long countByUserType(UserType userType);
 }

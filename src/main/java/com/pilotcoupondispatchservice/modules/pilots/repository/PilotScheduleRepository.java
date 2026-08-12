@@ -28,4 +28,8 @@ public interface PilotScheduleRepository extends JpaRepository<PilotSchedule, Lo
     List<PilotSchedule> findOverlapping(@Param("pilotId") Long pilotId,
                                          @Param("start") LocalDateTime start,
                                          @Param("end") LocalDateTime end);
+
+    // Dashboard: pilots whose schedule window contains this instant (i.e. IN_PROGRESS right now).
+    @Query("SELECT COUNT(DISTINCT s.pilot.id) FROM PilotSchedule s WHERE s.serviceStart <= :now AND s.serviceEnd > :now")
+    long countBusyPilotsAt(@Param("now") LocalDateTime now);
 }

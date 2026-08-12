@@ -41,6 +41,7 @@ public class Constant {
             PermissionConstant.PILOT_VIEW_ALL,
             PermissionConstant.PILOT_CHANGE_STATUS,
             PermissionConstant.PILOT_SCHEDULE_VIEW,
+            PermissionConstant.DASHBOARD_VIEW_ALL,
     };
 
     public static final PermissionConstant[] OWNER_PERMISSION_LIST = {
@@ -64,6 +65,7 @@ public class Constant {
             PermissionConstant.BOOKING_CREATE,
             PermissionConstant.BOOKING_VIEW_OWN,
             PermissionConstant.BOOKING_CANCEL,
+            PermissionConstant.DASHBOARD_VIEW_OWN,
     };
 
 }

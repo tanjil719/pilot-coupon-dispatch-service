@@ -1,5 +1,6 @@
 package com.pilotcoupondispatchservice.modules.pilots.repository;
 
+import com.pilotcoupondispatchservice.enums.PilotStatus;
 import com.pilotcoupondispatchservice.modules.pilots.entity.Pilot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -18,6 +19,8 @@ public interface PilotRepository extends JpaRepository<Pilot, Long>, JpaSpecific
     boolean existsByLicenseNo(String licenseNo);
 
     boolean existsByLicenseNoAndIdNot(String licenseNo, Long id);
+
+    long countByStatus(PilotStatus status);
 
     @Query("SELECT p FROM Pilot p WHERE p.status = com.pilotcoupondispatchservice.enums.PilotStatus.AVAILABLE " +
             "AND NOT EXISTS (SELECT 1 FROM PilotSchedule s WHERE s.pilot = p " +

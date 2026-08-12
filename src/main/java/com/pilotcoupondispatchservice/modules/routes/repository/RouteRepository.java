@@ -26,4 +26,6 @@ public interface RouteRepository extends JpaRepository<Route, Long>, JpaSpecific
     boolean existsByStartPointIgnoreCaseAndEndPointIgnoreCase(String startPoint, String endPoint);
 
     boolean existsByStartPointIgnoreCaseAndEndPointIgnoreCaseAndIdNot(String startPoint, String endPoint, Long id);
+
+    long countByActiveTrue();
 }

@@ -76,7 +76,13 @@ public enum PermissionConstant {
     PILOT_DELETE("Delete Pilot", "PILOT_DELETE", "Pilot-Module", "Soft delete a pilot."),
     PILOT_VIEW_ALL("View All Pilots", "PILOT_VIEW_ALL", "Pilot-Module", "View all pilots and pilot availability."),
     PILOT_CHANGE_STATUS("Change Pilot Status", "PILOT_CHANGE_STATUS", "Pilot-Module", "Change a pilot's employment status."),
-    PILOT_SCHEDULE_VIEW("View Pilot Schedules", "PILOT_SCHEDULE_VIEW", "Pilot-Module", "View pilot schedules and calendars.");
+    PILOT_SCHEDULE_VIEW("View Pilot Schedules", "PILOT_SCHEDULE_VIEW", "Pilot-Module", "View pilot schedules and calendars."),
+
+    /* ============ Dashboard ===========*/
+    // NOTE: permission bit position = enum ordinal (see PermissionServiceImpl), so new values must
+    // always be appended at the end of this enum, never inserted in the middle.
+    DASHBOARD_VIEW_OWN("View Own Dashboard", "DASHBOARD_VIEW_OWN", "Dashboard-Module", "View the owner landing dashboard."),
+    DASHBOARD_VIEW_ALL("View All Dashboard", "DASHBOARD_VIEW_ALL", "Dashboard-Module", "View the admin landing dashboard.");
 
 
     private final String value;
