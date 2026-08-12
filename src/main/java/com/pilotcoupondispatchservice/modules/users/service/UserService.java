@@ -5,6 +5,7 @@ import com.pilotcoupondispatchservice.constants.PermissionConstant;
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.repository.UserRepository;
+import com.pilotcoupondispatchservice.utils.SecurityUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -95,8 +96,8 @@ public class UserService {
     }
 
     @HasPermission(permission = PermissionConstant.READ_USER_PROFILE)
-    public User getUserProfile(Long id) {
-        return getUserById(id);
+    public User getUserProfile() {
+        return getUserById(SecurityUtil.getLoggedInUserId());
     }
 
     @HasPermission(permission = PermissionConstant.MODIFY_USER_PROFILE)

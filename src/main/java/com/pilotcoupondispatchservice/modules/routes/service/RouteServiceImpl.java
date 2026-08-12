@@ -91,16 +91,11 @@ public class RouteServiceImpl implements RouteService {
         }
         route.setRouteCode(routeCode);
 
-
         route.setName(request.getName());
         route.setStartPoint(startPoint);
         route.setEndPoint(endPoint);
         route.setDistanceKm(request.getDistanceKm());
         route.setEstimatedDurationMinutes(request.getEstimatedDurationMinutes());
-
-        // TODO(next-module): changing serviceFee here only affects future bookings. Booking copies
-        // feeAmount onto itself at creation time, so no historical recalculation is ever performed
-        // for bookings that already exist on this route.
         route.setServiceFee(request.getServiceFee());
         route.setDescription(request.getDescription());
 
@@ -111,10 +106,6 @@ public class RouteServiceImpl implements RouteService {
     @HasPermission(permission = PermissionConstant.ROUTE_CHANGE_STATUS)
     public RouteAdminResponse updateRouteStatus(Long id, Boolean active) {
         Route route = findByIdOrThrow(id);
-
-        // TODO(next-module): deactivating a route does not cancel anything. Already-approved
-        // bookings on this route continue normally; only NEW bookings are blocked, once Booking
-        // creation checks route.active (see the ROUTE_INACTIVE TODO on getActiveRoute below).
         route.setActive(active);
 
         return RouteMapper.toAdminResponse(routeRepository.save(route));
@@ -133,22 +124,9 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     @HasPermission(permission = PermissionConstant.ROUTE_VIEW)
-    @Transactional(readOnly = true)
     public RouteResponse getActiveRouteById(Long id) {
         Route route = routeRepository.findByIdAndActiveTrue(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Route not found with id: '" + id + "'"));
-
-        // TODO(next-module): Booking creation must re-check the route is still active at submission
-        // time, since a route can be deactivated between browsing and submitting. Call something
-        // like this from BookingServiceImpl#createBooking before creating the booking:
-        //
-        // private void assertRouteIsActive(Long routeId) {
-        //     Route route = routeRepository.findById(routeId)
-        //             .orElseThrow(() -> new ResourceNotFoundException("ROUTE_NOT_FOUND: Route not found with id: '" + routeId + "'"));
-        //     if (!route.getActive()) {
-        //         throw new InvalidRequestException("ROUTE_INACTIVE: Route is no longer active and cannot accept new bookings");
-        //     }
-        // }
 
         return RouteMapper.toResponse(route);
     }

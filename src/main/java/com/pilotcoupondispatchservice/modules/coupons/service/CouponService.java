@@ -20,8 +20,6 @@ public interface CouponService {
 
     CouponAdminResponse manualIssueCoupon(CouponManualIssueRequest request);
 
-//    CouponAdminResponse issueRefundCoupon(Long ownerId, Double amount, Long refundOfBookingId);
-
     Page<CouponAdminResponse> listAllCoupons(CouponStatus status, Long ownerId, LocalDateTime from, LocalDateTime to, String search, Pageable pageable);
 
     CouponAdminResponse getCoupon(Long id);

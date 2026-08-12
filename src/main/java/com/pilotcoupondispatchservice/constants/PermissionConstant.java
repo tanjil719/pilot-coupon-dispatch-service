@@ -42,7 +42,6 @@ public enum PermissionConstant {
     /* ============ Route ===========*/
     ROUTE_CREATE("Create Route", "ROUTE_CREATE", "Route-Module", "Create a route."),
     ROUTE_UPDATE("Update Route", "ROUTE_UPDATE", "Route-Module", "Update a route."),
-    ROUTE_DELETE("Delete Route", "ROUTE_DELETE", "Route-Module", "Soft delete a route."),
     ROUTE_VIEW_ALL("View All Routes", "ROUTE_VIEW_ALL", "Route-Module", "View all routes, including inactive ones."),
     ROUTE_CHANGE_STATUS("Change Route Status", "ROUTE_CHANGE_STATUS", "Route-Module", "Activate or deactivate a route."),
     ROUTE_VIEW("View Route", "ROUTE_VIEW", "Route-Module", "View active routes."),
