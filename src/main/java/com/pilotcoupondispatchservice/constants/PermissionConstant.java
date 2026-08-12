@@ -68,7 +68,15 @@ public enum PermissionConstant {
     BOOKING_VIEW_ALL("View All Bookings", "BOOKING_VIEW_ALL", "Booking-Module", "View all bookings."),
     BOOKING_STATUS_UPDATE("Update Booking Status", "BOOKING_STATUS_UPDATE", "Booking-Module", "Approve or reject a pending booking."),
     BOOKING_COMPLETE("Complete Booking", "BOOKING_COMPLETE", "Booking-Module", "Start or complete an in-progress booking."),
-    BOOKING_ASSIGN_PILOT("Assign Pilot", "BOOKING_ASSIGN_PILOT", "Booking-Module", "Assign a pilot to a booking on approval.");
+    BOOKING_ASSIGN_PILOT("Assign Pilot", "BOOKING_ASSIGN_PILOT", "Booking-Module", "Assign a pilot to a booking on approval."),
+
+    /* ============ Pilot ===========*/
+    PILOT_CREATE("Create Pilot", "PILOT_CREATE", "Pilot-Module", "Create a pilot."),
+    PILOT_UPDATE("Update Pilot", "PILOT_UPDATE", "Pilot-Module", "Update a pilot's details."),
+    PILOT_DELETE("Delete Pilot", "PILOT_DELETE", "Pilot-Module", "Soft delete a pilot."),
+    PILOT_VIEW_ALL("View All Pilots", "PILOT_VIEW_ALL", "Pilot-Module", "View all pilots and pilot availability."),
+    PILOT_CHANGE_STATUS("Change Pilot Status", "PILOT_CHANGE_STATUS", "Pilot-Module", "Change a pilot's employment status."),
+    PILOT_SCHEDULE_VIEW("View Pilot Schedules", "PILOT_SCHEDULE_VIEW", "Pilot-Module", "View pilot schedules and calendars.");
 
 
     private final String value;

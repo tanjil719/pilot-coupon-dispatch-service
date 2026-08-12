@@ -37,6 +37,9 @@ public class BookingDetailResponse implements Serializable {
     private String couponCode;
     private Double couponAmount;
 
+    private String pilotName;
+    private String pilotPhone;
+
     private BookingStatus status;
     private PaymentStatus paymentStatus;
 
@@ -45,7 +48,4 @@ public class BookingDetailResponse implements Serializable {
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
-
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime completedAt;
 }

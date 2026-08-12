@@ -44,6 +44,10 @@ public class BookingAdminResponse implements Serializable {
     private String couponCode;
     private Double couponAmount;
 
+    private String pilotCode;
+    private String pilotName;
+    private String pilotPhone;
+
     private BookingStatus status;
     private PaymentStatus paymentStatus;
 

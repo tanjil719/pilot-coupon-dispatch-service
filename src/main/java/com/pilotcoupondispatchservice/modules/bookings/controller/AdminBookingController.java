@@ -53,22 +53,4 @@ public class AdminBookingController {
         BookingAdminResponse response = bookingService.reviewBooking(id, request);
         return ResponseEntity.ok(response);
     }
-
-//    @PatchMapping("/{id}/start")
-//    public ResponseEntity<?> startBooking(@PathVariable Long id) {
-//        BookingAdminResponse response = bookingService.startBooking(id);
-//        return ResponseEntity.ok(response);
-//    }
-
-//    @PatchMapping("/{id}/complete")
-//    public ResponseEntity<?> completeBooking(@PathVariable Long id) {
-//        BookingAdminResponse response = bookingService.completeBooking(id);
-//        return ResponseEntity.ok(response);
-//    }
-
-//    @PatchMapping("/{id}/cancel")
-//    public ResponseEntity<?> cancelBooking(@PathVariable Long id, @Valid @RequestBody BookingCancelRequest request) {
-//        BookingAdminResponse response = bookingService.cancelBooking(id, request);
-//        return ResponseEntity.ok(response);
-//    }
 }

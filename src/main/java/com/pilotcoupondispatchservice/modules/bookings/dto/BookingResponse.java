@@ -39,6 +39,9 @@ public class BookingResponse implements Serializable {
 
     private Double couponAmount;
 
+    private String pilotName;
+    private String pilotPhone;
+
     private BookingStatus status;
     private PaymentStatus paymentStatus;
 

@@ -5,6 +5,7 @@ import com.pilotcoupondispatchservice.modules.bookings.dto.BookingDetailResponse
 import com.pilotcoupondispatchservice.modules.bookings.dto.BookingResponse;
 import com.pilotcoupondispatchservice.modules.bookings.entity.Booking;
 import com.pilotcoupondispatchservice.modules.coupons.entity.Coupon;
+import com.pilotcoupondispatchservice.modules.pilots.entity.Pilot;
 import com.pilotcoupondispatchservice.modules.routes.entity.Route;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.vehicles.entity.Vehicle;
@@ -37,6 +38,12 @@ public final class BookingMapper {
             response.setCouponAmount(coupon.getAmount());
         }
 
+        Pilot pilot = booking.getPilot();
+        if (pilot != null) {
+            response.setPilotName(pilot.getName());
+            response.setPilotPhone(pilot.getPhone());
+        }
+
         response.setStatus(booking.getStatus());
         response.setPaymentStatus(booking.getPaymentStatus());
         response.setRejectionReason(booking.getRejectionReason());
@@ -60,6 +67,8 @@ public final class BookingMapper {
         response.setServiceEnd(base.getApproximateServiceEnd());
         response.setCouponCode(base.getCouponCode());
         response.setCouponAmount(base.getCouponAmount());
+        response.setPilotName(base.getPilotName());
+        response.setPilotPhone(base.getPilotPhone());
         response.setStatus(base.getStatus());
         response.setPaymentStatus(base.getPaymentStatus());
         response.setRejectionReason(base.getRejectionReason());
@@ -97,6 +106,13 @@ public final class BookingMapper {
         if (coupon != null) {
             response.setCouponCode(coupon.getCode());
             response.setCouponAmount(coupon.getAmount());
+        }
+
+        Pilot pilot = booking.getPilot();
+        if (pilot != null) {
+            response.setPilotCode(pilot.getPilotCode());
+            response.setPilotName(pilot.getName());
+            response.setPilotPhone(pilot.getPhone());
         }
 
         response.setStatus(booking.getStatus());

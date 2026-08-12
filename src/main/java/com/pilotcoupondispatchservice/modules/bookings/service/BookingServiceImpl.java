@@ -2,7 +2,6 @@ package com.pilotcoupondispatchservice.modules.bookings.service;
 
 import com.pilotcoupondispatchservice.annotations.HasPermission;
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
-import com.pilotcoupondispatchservice.dao.PermissionService;
 import com.pilotcoupondispatchservice.enums.BookingStatus;
 import com.pilotcoupondispatchservice.enums.CouponStatus;
 import com.pilotcoupondispatchservice.enums.PaymentStatus;
@@ -17,6 +16,9 @@ import com.pilotcoupondispatchservice.modules.bookings.repository.BookingSpecifi
 import com.pilotcoupondispatchservice.modules.coupons.entity.Coupon;
 import com.pilotcoupondispatchservice.modules.coupons.repository.CouponRepository;
 import com.pilotcoupondispatchservice.modules.coupons.service.CouponService;
+import com.pilotcoupondispatchservice.modules.pilots.entity.Pilot;
+import com.pilotcoupondispatchservice.modules.pilots.entity.PilotSchedule;
+import com.pilotcoupondispatchservice.modules.pilots.service.PilotScheduleService;
 import com.pilotcoupondispatchservice.modules.routes.entity.Route;
 import com.pilotcoupondispatchservice.modules.routes.repository.RouteRepository;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
@@ -33,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -43,24 +44,13 @@ public class BookingServiceImpl implements BookingService {
 
     private static final int DEFAULT_DURATION_MINUTES = 120;
 
-    // Central status transition guard: which target statuses are legal from a given current
-    // status. COMPLETED, REJECTED and CANCELLED are terminal (empty target sets).
-//    private static final Map<BookingStatus, Set<BookingStatus>> ALLOWED_TRANSITIONS = Map.of(
-//            BookingStatus.PENDING_APPROVAL, Set.of(BookingStatus.APPROVED, BookingStatus.REJECTED, BookingStatus.CANCELLED),
-//            BookingStatus.APPROVED, Set.of(BookingStatus.IN_PROGRESS, BookingStatus.CANCELLED),
-//            BookingStatus.IN_PROGRESS, Set.of(BookingStatus.COMPLETED),
-//            BookingStatus.COMPLETED, Set.of(),
-//            BookingStatus.REJECTED, Set.of(),
-//            BookingStatus.CANCELLED, Set.of()
-//    );
-
     private final BookingRepository bookingRepository;
     private final VehicleRepository vehicleRepository;
     private final RouteRepository routeRepository;
     private final CouponRepository couponRepository;
     private final UserRepository userRepository;
     private final CouponService couponService;
-    private final PermissionService permissionService;
+    private final PilotScheduleService pilotScheduleService;
 
     @Override
     @HasPermission(permission = PermissionConstant.BOOKING_CREATE)
@@ -203,7 +193,6 @@ public class BookingServiceImpl implements BookingService {
         return toAdminResponse(booking);
     }
 
-
     @Override
     @HasPermission(permission = PermissionConstant.BOOKING_STATUS_UPDATE)
     @Transactional
@@ -215,6 +204,9 @@ public class BookingServiceImpl implements BookingService {
         }
 
         if (targetStatus == BookingStatus.APPROVED) {
+            if (request.getPilotId() == null) {
+                throw new InvalidRequestException("A pilot must be selected to approve a booking");
+            }
             return approveBooking(id, request.getPilotId());
         }
 
@@ -243,26 +235,19 @@ public class BookingServiceImpl implements BookingService {
             throw new InvalidRequestException("Coupon " + coupon.getCode() + " expired while awaiting approval, reject this booking instead");
         }
 
-        // TODO(next-module): once the Pilot module exists, assign a pilot inside this same
-        // transaction (using the admin-selected pilotId above, or a free pilot if none is given)
-        // and block approval when none is free for the booking window:
-        //
-        // List<Pilot> freePilots = bookingRepository.findFreePilots(booking.getServiceStart(), booking.getServiceEnd());
-        // if (freePilots.isEmpty()) {
-        //     throw new InvalidRequestException("NO_PILOT_AVAILABLE: No pilot is free for this booking's service window");
-        // }
-        // Pilot pilot = pilotId != null ? pilotRepository.findById(pilotId).orElseThrow(...) : freePilots.get(0);
-        // booking.setPilot(pilot);
-        // booking.setAssignedAt(LocalDateTime.now());
-        // booking.setAssignedBy(userRepository.getReferenceById(SecurityUtil.getLoggedInUserId()));
-        //
-        // Until then, approval proceeds without a pilot and the assignment step above is skipped.
+
+        PilotSchedule schedule = pilotScheduleService.assignPilotToBooking(pilotId, booking);
+        Pilot pilot = schedule.getPilot();
+        booking.setPilot(pilot);
+        booking.setAssignedAt(schedule.getAssignedAt());
+        booking.setAssignedBy(SecurityUtil.getLoggedInUser().getName());
 
         coupon.setStatus(CouponStatus.USED);
         coupon.setUsedAt(LocalDateTime.now());
         couponRepository.save(coupon);
 
         booking.setStatus(BookingStatus.APPROVED);
+        booking.setPaymentStatus(PaymentStatus.PAID);
         bookingRepository.save(booking);
 
         return toAdminResponse(booking);
@@ -285,80 +270,6 @@ public class BookingServiceImpl implements BookingService {
         return toAdminResponse(booking);
     }
 
-//    private void requirePermission(PermissionConstant permission) {
-//        if (!permissionService.hasAccessPermission(permission)) {
-//            throw new PermissionDeniedException("Access Denied. Required Permission: " + permission.getValue());
-//        }
-//    }
-
-//    @Override
-//    @HasPermission(permission = PermissionConstant.BOOKING_COMPLETE)
-//    @Transactional
-//    public BookingAdminResponse startBooking(Long id) {
-//        Booking booking = findByIdOrThrow(id);
-//        assertTransition(booking.getStatus(), BookingStatus.IN_PROGRESS);
-//
-//        booking.setStatus(BookingStatus.IN_PROGRESS);
-//        bookingRepository.save(booking);
-//
-//        return toAdminResponse(booking);
-//    }
-
-//    @Override
-//    @HasPermission(permission = PermissionConstant.BOOKING_COMPLETE)
-//    @Transactional
-//    public BookingAdminResponse completeBooking(Long id) {
-//        Booking booking = findByIdOrThrow(id);
-//        assertTransition(booking.getStatus(), BookingStatus.COMPLETED);
-//
-//        booking.setStatus(BookingStatus.COMPLETED);
-//        booking.setCompletedAt(LocalDateTime.now());
-//        bookingRepository.save(booking);
-//
-//        return toAdminResponse(booking);
-//    }
-
-//    @Override
-//    @HasPermission(permission = PermissionConstant.BOOKING_REJECT)
-//    @Transactional
-//    public BookingAdminResponse cancelBooking(Long id, BookingCancelRequest request) {
-//        if (!StringUtils.hasText(request.getReason())) {
-//            throw new InvalidRequestException("Reason is required to cancel a booking");
-//        }
-//
-//        Booking booking = findByIdOrThrow(id);
-//        assertTransition(booking.getStatus(), BookingStatus.CANCELLED);
-//
-//        Long adminId = SecurityUtil.getLoggedInUserId();
-//        BookingStatus previous = booking.getStatus();
-//
-//        if (previous == BookingStatus.PENDING_APPROVAL) {
-//            releaseCouponToActive(booking.getCoupon());
-//        } else {
-//            // APPROVED: the coupon is already USED. Do not resurrect it, since the payment history
-//            // must stay truthful; issue a brand new REFUND coupon to the same owner instead, reusing
-//            // the existing coupon issuing service rather than duplicating creation logic.
-//            Coupon original = booking.getCoupon();
-//            couponService.issueRefundCoupon(booking.getOwner().getId(), original.getAmount(), booking.getId());
-//        }
-//
-//        booking.setStatus(BookingStatus.CANCELLED);
-//        booking.setPaymentStatus(PaymentStatus.UNPAID);
-//        booking.setCancellationReason(request.getReason());
-//        booking.setReviewedBy(userRepository.getReferenceById(adminId));
-//        booking.setReviewedAt(LocalDateTime.now());
-//        bookingRepository.save(booking);
-//
-//        return toAdminResponse(booking);
-//    }
-
-    //*********** Internal Helper Methods ***********//
-
-//    private void assertTransition(BookingStatus current, BookingStatus target) {
-//        if (!ALLOWED_TRANSITIONS.getOrDefault(current, Set.of()).contains(target)) {
-//            throw new InvalidRequestException("Cannot move booking from " + current + " to " + target);
-//        }
-//    }
 
     private void releaseCouponToActive(Coupon coupon) {
         if (coupon == null) {

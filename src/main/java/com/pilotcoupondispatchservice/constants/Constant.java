@@ -32,10 +32,15 @@ public class Constant {
             PermissionConstant.COUPON_CANCEL,
             PermissionConstant.COUPON_UPDATE,
             PermissionConstant.BOOKING_VIEW_ALL,
-//            PermissionConstant.BOOKING_APPROVE,
-//            PermissionConstant.BOOKING_REJECT,
+            PermissionConstant.BOOKING_STATUS_UPDATE,
             PermissionConstant.BOOKING_COMPLETE,
             PermissionConstant.BOOKING_ASSIGN_PILOT,
+            PermissionConstant.PILOT_CREATE,
+            PermissionConstant.PILOT_UPDATE,
+            PermissionConstant.PILOT_DELETE,
+            PermissionConstant.PILOT_VIEW_ALL,
+            PermissionConstant.PILOT_CHANGE_STATUS,
+            PermissionConstant.PILOT_SCHEDULE_VIEW,
     };
 
     public static final PermissionConstant[] OWNER_PERMISSION_LIST = {

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pilotcoupondispatchservice.enums.BookingStatus;
 import com.pilotcoupondispatchservice.enums.PaymentStatus;
 import com.pilotcoupondispatchservice.modules.coupons.entity.Coupon;
-import com.pilotcoupondispatchservice.modules.coupons.entity.CouponRequest;
+import com.pilotcoupondispatchservice.modules.pilots.entity.Pilot;
 import com.pilotcoupondispatchservice.modules.routes.entity.Route;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.vehicles.entity.Vehicle;
@@ -16,9 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 
@@ -33,7 +31,8 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
                 @Index(name = "idx_bookings_owner_id", columnList = "owner_id"),
                 @Index(name = "idx_bookings_status", columnList = "status"),
                 @Index(name = "idx_bookings_vehicle_id", columnList = "vehicle_id"),
-                @Index(name = "idx_bookings_service_start", columnList = "service_start")
+                @Index(name = "idx_bookings_service_start", columnList = "service_start"),
+                @Index(name = "idx_bookings_pilot_id", columnList = "pilot_id")
         }
 )
 public class Booking implements Serializable {
@@ -83,6 +82,16 @@ public class Booking implements Serializable {
     @Column(name = "cancellation_reason", length = 500)
     private String cancellationReason;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pilot_id")
+    private Pilot pilot;
+
+    @Column(name = "assigned_at")
+    private LocalDateTime assignedAt;
+
+    @Column(name = "assigned_by", length = 100)
+    private String assignedBy;
+
     @JsonProperty(access = READ_ONLY)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(nullable = false, updatable = false)
@@ -91,23 +100,6 @@ public class Booking implements Serializable {
     @JsonProperty(access = READ_ONLY)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
-
-    // TODO(next-module): once the Pilot module exists, enable pilot assignment on the booking. The
-    // pilot is assigned by the admin inside the same transaction as approval (see
-    // BookingServiceImpl#approveBooking), and approval must be blocked with NO_PILOT_AVAILABLE when
-    // no pilot is free for the booking window. Until then, approval proceeds without a pilot and the
-    // assignment step below is skipped entirely.
-    //
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "pilot_id")
-    // private Pilot pilot;
-    //
-    // @Column(name = "assigned_at")
-    // private LocalDateTime assignedAt;
-    //
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "assigned_by")
-    // private User assignedBy;
 
     @PrePersist
     public void prePersist() {
