@@ -45,7 +45,21 @@ public enum PermissionConstant {
     ROUTE_DELETE("Delete Route", "ROUTE_DELETE", "Route-Module", "Soft delete a route."),
     ROUTE_VIEW_ALL("View All Routes", "ROUTE_VIEW_ALL", "Route-Module", "View all routes, including inactive ones."),
     ROUTE_CHANGE_STATUS("Change Route Status", "ROUTE_CHANGE_STATUS", "Route-Module", "Activate or deactivate a route."),
-    ROUTE_VIEW("View Route", "ROUTE_VIEW", "Route-Module", "View active routes.");
+    ROUTE_VIEW("View Route", "ROUTE_VIEW", "Route-Module", "View active routes."),
+
+    /* ============ Coupon ===========*/
+    // NOTE: permission bit position = enum ordinal (see PermissionServiceImpl), so new values must
+    // always be appended at the end of this enum, never inserted in the middle.
+    COUPON_REQUEST_CREATE("Create Coupon Request", "COUPON_REQUEST_CREATE", "Coupon-Module", "Submit a coupon request for an approved vehicle."),
+    COUPON_REQUEST_VIEW_OWN("View Own Coupon Requests", "COUPON_REQUEST_VIEW_OWN", "Coupon-Module", "View own coupon requests."),
+    COUPON_REQUEST_CANCEL("Cancel Coupon Request", "COUPON_REQUEST_CANCEL", "Coupon-Module", "Cancel own pending coupon request."),
+    COUPON_VIEW_OWN("View Own Coupons", "COUPON_VIEW_OWN", "Coupon-Module", "View own coupons."),
+    COUPON_REQUEST_VIEW_ALL("View All Coupon Requests", "COUPON_REQUEST_VIEW_ALL", "Coupon-Module", "View all coupon requests."),
+    COUPON_ISSUE("Issue Coupon", "COUPON_ISSUE", "Coupon-Module", "Issue a coupon, either against a request or manually."),
+    COUPON_REQUEST_REJECT("Reject Coupon Request", "COUPON_REQUEST_REJECT", "Coupon-Module", "Reject a pending coupon request."),
+    COUPON_VIEW_ALL("View All Coupons", "COUPON_VIEW_ALL", "Coupon-Module", "View all coupons."),
+    COUPON_CANCEL("Cancel Coupon", "COUPON_CANCEL", "Coupon-Module", "Cancel an unused coupon."),
+    COUPON_UPDATE("Update Coupon", "COUPON_UPDATE", "Coupon-Module", "Update the amount and expiry of an unused coupon.");
 
 
     private final String value;

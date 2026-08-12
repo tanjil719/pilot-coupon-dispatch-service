@@ -25,6 +25,12 @@ public class Constant {
             PermissionConstant.ROUTE_DELETE,
             PermissionConstant.ROUTE_VIEW_ALL,
             PermissionConstant.ROUTE_CHANGE_STATUS,
+            PermissionConstant.COUPON_REQUEST_VIEW_ALL,
+            PermissionConstant.COUPON_ISSUE,
+            PermissionConstant.COUPON_REQUEST_REJECT,
+            PermissionConstant.COUPON_VIEW_ALL,
+            PermissionConstant.COUPON_CANCEL,
+            PermissionConstant.COUPON_UPDATE,
     };
 
     public static final PermissionConstant[] OWNER_PERMISSION_LIST = {
@@ -41,6 +47,10 @@ public class Constant {
             PermissionConstant.VEHICLE_UPDATE,
             PermissionConstant.VEHICLE_DELETE,
             PermissionConstant.ROUTE_VIEW,
+            PermissionConstant.COUPON_REQUEST_CREATE,
+            PermissionConstant.COUPON_REQUEST_VIEW_OWN,
+            PermissionConstant.COUPON_REQUEST_CANCEL,
+            PermissionConstant.COUPON_VIEW_OWN,
     };
 
 }

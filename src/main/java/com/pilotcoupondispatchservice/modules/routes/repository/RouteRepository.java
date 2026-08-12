@@ -14,6 +14,8 @@ public interface RouteRepository extends JpaRepository<Route, Long>, JpaSpecific
 
     Optional<Route> findByIdAndActiveTrue(Long id);
 
+    Optional<Route> findByRouteCodeIgnoreCase(String routeCode);
+
     @Query("SELECT r FROM Route r LEFT JOIN FETCH r.createdBy LEFT JOIN FETCH r.updatedBy WHERE r.id = :id")
     Optional<Route> findByIdWithAudit(@Param("id") Long id);
 
