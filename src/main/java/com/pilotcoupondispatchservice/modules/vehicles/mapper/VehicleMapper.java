@@ -23,8 +23,7 @@ public final class VehicleMapper {
         response.setRejectionReason(vehicle.getRejectionReason());
         response.setCreatedAt(vehicle.getCreatedAt());
         response.setUpdatedAt(vehicle.getUpdatedAt());
-//        response.setEditable(isEditable(vehicle));
-//        response.setBookable(isBookable(vehicle));
+
         return response;
     }
 
@@ -38,10 +37,9 @@ public final class VehicleMapper {
         response.setDescription(vehicle.getDescription());
         response.setStatus(vehicle.getStatus());
         response.setRejectionReason(vehicle.getRejectionReason());
+        response.setActive(vehicle.getActive());
         response.setCreatedAt(vehicle.getCreatedAt());
         response.setUpdatedAt(vehicle.getUpdatedAt());
-//        response.setEditable(isEditable(vehicle));
-//        response.setBookable(isBookable(vehicle));
 
         User owner = vehicle.getOwner();
         response.setOwnerId(owner.getId());
@@ -50,15 +48,7 @@ public final class VehicleMapper {
         response.setOwnerPhone(owner.getPhone());
 
         response.setReviewedAt(vehicle.getReviewedAt());
-        response.setReviewedByName(vehicle.getApprovedBy() == null ? null : vehicle.getApprovedBy().getName());
         return response;
     }
 
-//    private static boolean isEditable(Vehicle vehicle) {
-//        return Boolean.TRUE.equals(vehicle.getActive());
-//    }
-//
-//    private static boolean isBookable(Vehicle vehicle) {
-//        return vehicle.getStatus() == VehicleStatus.APPROVED;
-//    }
 }

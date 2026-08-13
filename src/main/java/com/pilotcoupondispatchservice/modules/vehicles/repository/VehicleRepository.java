@@ -2,6 +2,7 @@ package com.pilotcoupondispatchservice.modules.vehicles.repository;
 
 import com.pilotcoupondispatchservice.enums.VehicleStatus;
 import com.pilotcoupondispatchservice.modules.vehicles.entity.Vehicle;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,9 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
 
     Optional<Vehicle> findByIdAndOwnerId(Long id, Long ownerId);
 
+    @EntityGraph(attributePaths = "owner")
+    Optional<Vehicle> findWithOwnerById(Long id);
+
     @Query("SELECT v FROM Vehicle v LEFT JOIN FETCH v.owner LEFT JOIN FETCH v.approvedBy WHERE v.id = :id")
     Optional<Vehicle> findByIdWithOwnerAndApprovedBy(@Param("id") Long id);
 
@@ -23,7 +27,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
 
     boolean existsByRegistrationNoIgnoreCaseAndIdNot(String registrationNo, Long id);
 
-    // Dashboard: one grouped query per status instead of one count query per status.
     @Query("SELECT v.status, COUNT(v) FROM Vehicle v WHERE v.owner.id = :ownerId GROUP BY v.status")
     List<Object[]> countGroupedByStatusForOwner(@Param("ownerId") Long ownerId);
 

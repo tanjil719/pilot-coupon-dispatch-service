@@ -2,6 +2,7 @@ package com.pilotcoupondispatchservice.modules.vehicles.dto;
 
 import com.pilotcoupondispatchservice.enums.VehicleStatus;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class VehicleReviewRequest {
 
-    @NotBlank(message = "Status must not be null")
+    @NotNull(message = "Status must not be null")
     private VehicleStatus status;
 
     @Size(max = 500, message = "Rejection reason must not exceed 500 characters")

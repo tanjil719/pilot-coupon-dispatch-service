@@ -28,6 +28,7 @@ public class VehicleAdminResponse implements Serializable {
     private String description;
     private VehicleStatus status;
     private String rejectionReason;
+    private Boolean active;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
@@ -35,8 +36,6 @@ public class VehicleAdminResponse implements Serializable {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
 
-//    private boolean editable;
-//    private boolean bookable;
 
     private Long ownerId;
     private String ownerName;
@@ -45,8 +44,6 @@ public class VehicleAdminResponse implements Serializable {
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime reviewedAt;
-
-    private String reviewedByName;
 
     @PrePersist
     public void prePersist() {

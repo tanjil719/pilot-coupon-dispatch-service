@@ -82,13 +82,6 @@ public class Vehicle implements Serializable {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
 
-    // TODO(next-module): once the Booking module exists, enable the inverse side of the relation.
-    // A vehicle must not be hard deleted while an active booking references it (see
-    // VehicleServiceImpl#deleteVehicle for the corresponding guard).
-    //
-    // @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
-    // private List<Booking> bookings;
-
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();

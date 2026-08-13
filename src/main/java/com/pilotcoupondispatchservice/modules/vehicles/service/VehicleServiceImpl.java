@@ -107,11 +107,7 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setCapacity(request.getCapacity());
         vehicle.setDescription(request.getDescription());
 
-        // Owner rule: any update sends the vehicle back for re-review, whatever its prior status.
         vehicle.setStatus(VehicleStatus.PENDING);
-//        vehicle.setRejectionReason(null);
-//        vehicle.setApprovedBy(null);
-//        vehicle.setReviewedAt(null);
 
         return VehicleMapper.toResponse(vehicleRepository.save(vehicle));
     }
@@ -125,9 +121,8 @@ public class VehicleServiceImpl implements VehicleService {
             return false;
         }
 
-        // Only an APPROVED booking occupies the vehicle's schedule (mirrors BookingServiceImpl's overlap check).
         if (bookingRepository.existsByVehicleIdAndStatusIn(vehicle.getId(), List.of(BookingStatus.APPROVED))) {
-            throw new InvalidRequestException("VEHICLE_IN_USE: Cannot delete vehicle referenced by an active booking");
+            throw new InvalidRequestException("Cannot delete vehicle referenced by an active booking");
         }
 
         vehicle.setActive(false);
@@ -153,13 +148,14 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     @HasPermission(permission = PermissionConstant.VEHICLE_VIEW_ALL)
     public VehicleAdminResponse getVehicle(Long id) {
-        return VehicleMapper.toAdminResponse(findByIdOrThrow(id));
+        return VehicleMapper.toAdminResponse(findByIdWithOwnerOrThrow(id));
     }
 
     @Override
     @HasPermission(permission = PermissionConstant.VEHICLE_REVIEW)
+    @Transactional
     public VehicleAdminResponse reviewVehicle(Long id, VehicleReviewRequest request) {
-        Vehicle vehicle = findByIdOrThrow(id);
+        Vehicle vehicle = findByIdWithOwnerOrThrow(id);
 
         if (!vehicle.getActive()){
             throw new InvalidRequestException("Cannot review a deleted vehicle");
@@ -198,12 +194,17 @@ public class VehicleServiceImpl implements VehicleService {
     private Vehicle findByIdAndOwnerId(Long id) {
         Long ownerId = SecurityUtil.getLoggedInUserId();
         return vehicleRepository.findByIdAndOwnerId(id, ownerId)
-                .orElseThrow(() -> new ResourceNotFoundException("VEHICLE_NOT_FOUND: Vehicle not found with id: '" + id + "'"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: '" + id + "'"));
     }
 
     private Vehicle findByIdOrThrow(Long id) {
         return vehicleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("VEHICLE_NOT_FOUND: Vehicle not found with id: '" + id + "'"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: '" + id + "'"));
+    }
+
+    private Vehicle findByIdWithOwnerOrThrow(Long id) {
+        return vehicleRepository.findWithOwnerById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: '" + id + "'"));
     }
 
     private String normalizeRegistrationNo(String registrationNo) {

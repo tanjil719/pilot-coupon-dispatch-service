@@ -31,7 +31,4 @@ public class VehicleResponse implements Serializable {
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime updatedAt;
-//
-//    private boolean editable;
-//    private boolean bookable;
 }
