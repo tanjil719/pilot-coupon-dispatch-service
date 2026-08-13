@@ -1,6 +1,7 @@
 package com.pilotcoupondispatchservice.modules.pilots.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.pilotcoupondispatchservice.enums.BookingStatus;
 import com.pilotcoupondispatchservice.enums.ScheduleStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +19,8 @@ public class PilotScheduleResponse implements Serializable {
 
     private Long id;
     private Long bookingId;
-    private String ownerName;
-    private String vehicleName;
+    private String pilotName;
+//    private String vehicleRegistrationNo;
     private String routeCode;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
@@ -28,7 +29,7 @@ public class PilotScheduleResponse implements Serializable {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime serviceEnd;
 
-    private ScheduleStatus status;
+    private BookingStatus status;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime assignedAt;

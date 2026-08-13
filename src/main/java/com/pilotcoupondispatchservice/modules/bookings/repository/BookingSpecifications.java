@@ -4,6 +4,7 @@ import com.pilotcoupondispatchservice.enums.BookingStatus;
 import com.pilotcoupondispatchservice.modules.bookings.entity.Booking;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -20,12 +21,31 @@ public class BookingSpecifications {
         return (root, query, cb) -> (status == null) ? cb.conjunction() : cb.equal(root.get("status"), status);
     }
 
-    public static Specification<Booking> vehicleIdEquals(Long vehicleId) {
-        return (root, query, cb) -> (vehicleId == null) ? cb.conjunction() : cb.equal(root.get("vehicle").get("id"), vehicleId);
+    public static Specification<Booking> vehicleRegistrationNoContains(String registrationNo) {
+        return (root, query, cb) -> {
+            if (!StringUtils.hasText(registrationNo)) {
+                return cb.conjunction();
+            }
+            return cb.like(cb.lower(root.get("vehicle").get("registrationNo")), "%" + registrationNo.trim().toLowerCase() + "%");
+        };
     }
 
-    public static Specification<Booking> routeIdEquals(Long routeId) {
-        return (root, query, cb) -> (routeId == null) ? cb.conjunction() : cb.equal(root.get("route").get("id"), routeId);
+    public static Specification<Booking> ownerNameContains(String ownerName) {
+        return (root, query, cb) -> {
+            if (!StringUtils.hasText(ownerName)) {
+                return cb.conjunction();
+            }
+            return cb.like(cb.lower(root.get("owner").get("name")), "%" + ownerName.trim().toLowerCase() + "%");
+        };
+    }
+
+    public static Specification<Booking> routeCodeContains(String routeCode) {
+        return (root, query, cb) -> {
+            if (!StringUtils.hasText(routeCode)) {
+                return cb.conjunction();
+            }
+            return cb.like(cb.lower(root.get("route").get("routeCode")), "%" + routeCode.trim().toLowerCase() + "%");
+        };
     }
 
     public static Specification<Booking> serviceStartFrom(LocalDateTime from) {
@@ -43,6 +63,7 @@ public class BookingSpecifications {
                 root.fetch("vehicle", JoinType.LEFT);
                 root.fetch("route", JoinType.LEFT);
                 root.fetch("coupon", JoinType.LEFT);
+                root.fetch("pilot", JoinType.LEFT);
             }
             return cb.conjunction();
         };

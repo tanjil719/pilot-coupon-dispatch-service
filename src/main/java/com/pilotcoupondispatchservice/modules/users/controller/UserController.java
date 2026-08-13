@@ -1,6 +1,7 @@
 package com.pilotcoupondispatchservice.modules.users.controller;
 
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
+import com.pilotcoupondispatchservice.modules.users.dto.UserProfileResponse;
 import com.pilotcoupondispatchservice.modules.users.dto.UserResponse;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.service.UserService;
@@ -43,8 +44,8 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<?> getUserProfile() {
-        User user = userService.getUserProfile();
-        return ResponseEntity.ok(user);
+        UserProfileResponse profile = userService.getUserProfile();
+        return ResponseEntity.ok(profile);
     }
 
     @PutMapping("/{id}/profile")

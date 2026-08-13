@@ -1,7 +1,10 @@
 package com.pilotcoupondispatchservice.modules.pilots.repository;
 
+import com.pilotcoupondispatchservice.enums.BookingStatus;
 import com.pilotcoupondispatchservice.enums.ScheduleStatus;
+import com.pilotcoupondispatchservice.modules.bookings.entity.Booking;
 import com.pilotcoupondispatchservice.modules.pilots.entity.PilotSchedule;
+import jakarta.persistence.criteria.Fetch;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
@@ -25,7 +28,6 @@ public class PilotScheduleSpecifications {
         return (root, query, cb) -> (!StringUtils.hasText(routeCode)) ? cb.conjunction() : cb.equal(cb.lower(root.get("routeCode")), routeCode.trim().toLowerCase());
     }
 
-    // status is not a stored column; it is derived from serviceStart/serviceEnd against "now".
     public static Specification<PilotSchedule> statusEquals(ScheduleStatus status) {
         return (root, query, cb) -> {
             if (status == null) {
@@ -42,6 +44,10 @@ public class PilotScheduleSpecifications {
         };
     }
 
+    public static Specification<PilotSchedule> statusEquals(BookingStatus status) {
+        return (root, query, cb) -> (status == null) ? cb.conjunction() : cb.equal(root.get("booking").get("status"), status);
+    }
+
     public static Specification<PilotSchedule> serviceStartFrom(LocalDateTime from) {
         return (root, query, cb) -> (from == null) ? cb.conjunction() : cb.greaterThanOrEqualTo(root.get("serviceStart"), from);
     }
@@ -54,7 +60,8 @@ public class PilotScheduleSpecifications {
         return (root, query, cb) -> {
             if (query.getResultType() != Long.class && query.getResultType() != long.class) {
                 root.fetch("pilot", JoinType.LEFT);
-                root.fetch("booking", JoinType.LEFT);
+                Fetch<PilotSchedule, Booking> bookingFetch = root.fetch("booking", JoinType.LEFT);
+                bookingFetch.fetch("vehicle", JoinType.LEFT);
             }
             return cb.conjunction();
         };

@@ -15,13 +15,13 @@ public final class PilotScheduleMapper {
 
         Booking booking = schedule.getBooking();
         response.setBookingId(booking.getId());
-        response.setOwnerName(booking.getOwner().getName());
-        response.setVehicleName(booking.getVehicle().getName());
+//        response.setVehicleRegistrationNo(booking.getVehicle().getRegistrationNo());
 
+        response.setPilotName(schedule.getPilot().getName());
         response.setRouteCode(schedule.getRouteCode());
         response.setServiceStart(schedule.getServiceStart());
         response.setServiceEnd(schedule.getServiceEnd());
-        response.setStatus(schedule.getStatus());
+        response.setStatus(schedule.getBooking().getStatus());
         response.setAssignedAt(schedule.getAssignedAt());
         return response;
     }

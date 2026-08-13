@@ -100,7 +100,6 @@ public class DashboardServiceImpl implements DashboardService {
         response.setPendingActions(buildPendingActions(vehicleCounts, bookingCounts));
         response.setBookings(buildAdminBookingStats(bookingCounts, startOfDay, startOfNextDay));
         response.setCoupons(buildAdminCouponStats(now));
-//        response.setPayments(buildPaymentStats());
         response.setResources(buildResourceStats(vehicleCounts, now));
         response.setRecentBookings(buildAdminRecentBookings());
         response.setRecentCouponRequests(buildAdminRecentCouponRequests());
@@ -126,7 +125,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private OwnerCouponStatsDto buildOwnerCouponStats(Long ownerId, LocalDateTime now, LocalDateTime soon) {
-        Object[] row = couponRepository.ownerCouponStats(ownerId, now, soon);
+        Object[] row = couponRepository.ownerCouponStats(ownerId, now, soon).get(0);
 
         OwnerCouponStatsDto dto = new OwnerCouponStatsDto();
         dto.setActiveCount(toLong(row[0]));
@@ -231,7 +230,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private AdminCouponStatsDto buildAdminCouponStats(LocalDateTime now) {
-        Object[] row = couponRepository.adminCouponStats(now);
+        Object[] row = couponRepository.adminCouponStats(now).get(0);
 
         AdminCouponStatsDto dto = new AdminCouponStatsDto();
         dto.setIssuedCount(toLong(row[0]));
@@ -246,7 +245,7 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     private PaymentStatsDto buildPaymentStats() {
-        Object[] row = bookingRepository.paymentTotals();
+        Object[] row = bookingRepository.paymentTotals().get(0);
 
         PaymentStatsDto dto = new PaymentStatsDto();
         dto.setTotalCollectedAmount(toMoney(row[0]));

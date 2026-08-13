@@ -18,7 +18,7 @@ public interface BookingService {
 
     BookingResponse createBooking(BookingCreateRequest request);
 
-    Page<BookingResponse> listOwnBookings(BookingStatus status, LocalDateTime from, LocalDateTime to, Long vehicleId, Pageable pageable);
+    Page<BookingResponse> listOwnBookings(BookingStatus status, LocalDateTime from, LocalDateTime to, String registrationNo, Pageable pageable);
 
     BookingDetailResponse getOwnBooking(Long id);
 
@@ -26,7 +26,7 @@ public interface BookingService {
 
     // ---- Admin ----
 
-    Page<BookingAdminResponse> listAllBookings(BookingStatus status, Long ownerId, Long routeId, Long vehicleId, LocalDateTime from, LocalDateTime to, Pageable pageable);
+    Page<BookingAdminResponse> listAllBookings(BookingStatus status, String ownerName, String routeCode, LocalDateTime from, LocalDateTime to, Pageable pageable);
 
     BookingAdminResponse getBooking(Long id);
 

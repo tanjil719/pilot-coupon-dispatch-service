@@ -1,5 +1,6 @@
 package com.pilotcoupondispatchservice.modules.pilots.controller;
 
+import com.pilotcoupondispatchservice.enums.BookingStatus;
 import com.pilotcoupondispatchservice.enums.ScheduleStatus;
 import com.pilotcoupondispatchservice.modules.pilots.dto.PilotScheduleResponse;
 import com.pilotcoupondispatchservice.modules.pilots.service.PilotScheduleService;
@@ -29,7 +30,7 @@ public class AdminPilotScheduleController {
             @RequestParam(required = false) Long pilotId,
             @RequestParam(required = false) Long bookingId,
             @RequestParam(required = false) String routeCode,
-            @RequestParam(required = false) ScheduleStatus status,
+            @RequestParam(required = false) BookingStatus status,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime to,
             @RequestParam(defaultValue = "0") int page,

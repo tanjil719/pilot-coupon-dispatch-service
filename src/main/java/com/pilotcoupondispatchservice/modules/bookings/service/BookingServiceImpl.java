@@ -122,14 +122,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @HasPermission(permission = PermissionConstant.BOOKING_VIEW_OWN)
-    public Page<BookingResponse> listOwnBookings(BookingStatus status, LocalDateTime from, LocalDateTime to, Long vehicleId, Pageable pageable) {
+    public Page<BookingResponse> listOwnBookings(BookingStatus status, LocalDateTime from, LocalDateTime to, String registrationNo, Pageable pageable) {
         Long ownerId = SecurityUtil.getLoggedInUserId();
 
         Specification<Booking> specification = where(BookingSpecifications.ownerIdEquals(ownerId))
                 .and(BookingSpecifications.statusEquals(status))
                 .and(BookingSpecifications.serviceStartFrom(from))
                 .and(BookingSpecifications.serviceStartTo(to))
-                .and(BookingSpecifications.vehicleIdEquals(vehicleId))
+                .and(BookingSpecifications.vehicleRegistrationNoContains(registrationNo))
                 .and(BookingSpecifications.fetchAssociations());
 
         return bookingRepository.findAll(specification, pageable).map(BookingMapper::toResponse);
@@ -168,15 +168,10 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @HasPermission(permission = PermissionConstant.BOOKING_VIEW_ALL)
     @Transactional(readOnly = true)
-    public Page<BookingAdminResponse> listAllBookings(BookingStatus status, Long ownerId, Long routeId, Long vehicleId, LocalDateTime from, LocalDateTime to, Pageable pageable) {
-        // Default to PENDING_APPROVAL when no status filter is given, so the review queue is the
-        // landing view.
-        BookingStatus effectiveStatus = status == null ? BookingStatus.PENDING_APPROVAL : status;
-
-        Specification<Booking> specification = where(BookingSpecifications.statusEquals(effectiveStatus))
-                .and(BookingSpecifications.ownerIdEquals(ownerId))
-                .and(BookingSpecifications.routeIdEquals(routeId))
-                .and(BookingSpecifications.vehicleIdEquals(vehicleId))
+    public Page<BookingAdminResponse> listAllBookings(BookingStatus status, String ownerName, String routeCode, LocalDateTime from, LocalDateTime to, Pageable pageable) {
+        Specification<Booking> specification = where(BookingSpecifications.statusEquals(status))
+                .and(BookingSpecifications.ownerNameContains(ownerName))
+                .and(BookingSpecifications.routeCodeContains(routeCode))
                 .and(BookingSpecifications.serviceStartFrom(from))
                 .and(BookingSpecifications.serviceStartTo(to))
                 .and(BookingSpecifications.fetchAssociations());
@@ -199,10 +194,6 @@ public class BookingServiceImpl implements BookingService {
     public BookingAdminResponse reviewBooking(Long id, BookingReviewRequest request) {
         BookingStatus targetStatus = request.getStatus();
 
-        if (targetStatus != BookingStatus.APPROVED && targetStatus != BookingStatus.REJECTED) {
-            throw new InvalidRequestException("Status must be either APPROVED or REJECTED");
-        }
-
         if (targetStatus == BookingStatus.APPROVED) {
             if (request.getPilotId() == null) {
                 throw new InvalidRequestException("A pilot must be selected to approve a booking");
@@ -210,11 +201,20 @@ public class BookingServiceImpl implements BookingService {
             return approveBooking(id, request.getPilotId());
         }
 
-        if (request.getReason() == null || request.getReason().trim().isEmpty()) {
-            throw new InvalidRequestException("Reason is required to reject a booking");
+        if(targetStatus == BookingStatus.REJECTED) {
+            if (request.getReason() == null || request.getReason().trim().isEmpty()) {
+                throw new InvalidRequestException("Reason is required to reject a booking");
+            }
+
+            return rejectBooking(id, request.getReason());
         }
 
-        return rejectBooking(id, request.getReason());
+        Booking booking = findByIdOrThrow(id);
+        booking.setStatus(targetStatus);
+        bookingRepository.save(booking);
+
+        return toAdminResponse(booking);
+
     }
 
     private BookingAdminResponse approveBooking(Long id, Long pilotId) {

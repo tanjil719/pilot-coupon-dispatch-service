@@ -19,6 +19,7 @@ public final class CouponMapper {
         response.setCode(coupon.getCode());
         response.setAmount(coupon.getAmount());
         response.setStatus(coupon.getStatus());
+        response.setCancelReason(coupon.getCancelReason());
         response.setExpiresAt(coupon.getExpiresAt());
         response.setUsedAt(coupon.getUsedAt());
         return response;

@@ -51,6 +51,9 @@ public class Coupon implements Serializable {
     @Column(nullable = false, length = 20)
     private CouponStatus status = CouponStatus.NOT_USED;
 
+    @Column(name = "cancel_reason", length = 500)
+    private String cancelReason;
+
     @Column(name = "issued_at", nullable = false)
     private LocalDateTime issuedAt;
 

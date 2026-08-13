@@ -54,5 +54,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, JpaSpec
             "COALESCE(SUM(CASE WHEN b.coupon IS NOT NULL AND b.coupon.amount > b.route.serviceFee " +
             "THEN b.coupon.amount - b.route.serviceFee ELSE 0.0 END), 0.0) " +
             "FROM Booking b WHERE b.paymentStatus = com.pilotcoupondispatchservice.enums.PaymentStatus.PAID")
-    Object[] paymentTotals();
+    List<Object[]> paymentTotals();
 }

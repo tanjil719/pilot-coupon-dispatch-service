@@ -147,6 +147,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @HasPermission(permission = PermissionConstant.COUPON_CANCEL)
+    @Transactional
     public CouponAdminResponse cancelCoupon(Long id, CouponCancelRequest request) {
         Coupon coupon = findByIdOrThrow(id);
 
@@ -155,11 +156,13 @@ public class CouponServiceImpl implements CouponService {
         }
 
         coupon.setStatus(CouponStatus.CANCELLED);
+        coupon.setCancelReason(request.getReason());
         return CouponMapper.toAdminResponse(couponRepository.save(coupon));
     }
 
     @Override
     @HasPermission(permission = PermissionConstant.COUPON_UPDATE)
+    @Transactional
     public CouponAdminResponse updateCoupon(Long id, CouponUpdateRequest request) {
         Coupon coupon = findByIdOrThrow(id);
 
@@ -176,7 +179,7 @@ public class CouponServiceImpl implements CouponService {
     //*********** Internal Helper Methods ***********//
 
     private Coupon findByIdOrThrow(Long id) {
-        return couponRepository.findById(id)
+        return couponRepository.findByIdWithOwner(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Coupon not found with id: " + id));
     }
 

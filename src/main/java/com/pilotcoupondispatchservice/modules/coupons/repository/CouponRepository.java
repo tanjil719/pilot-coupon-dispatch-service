@@ -17,6 +17,9 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, JpaSpecif
 
     Optional<Coupon> findByIdAndOwnerId(Long id, Long ownerId);
 
+    @Query("SELECT c FROM Coupon c JOIN FETCH c.owner WHERE c.id = :id")
+    Optional<Coupon> findByIdWithOwner(@Param("id") Long id);
+
     boolean existsByCode(String code);
 
     Optional<Coupon> findByCodeAndOwnerId(String code, Long ownerId);
@@ -33,7 +36,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, JpaSpecif
             "COALESCE(SUM(CASE WHEN c.status = com.pilotcoupondispatchservice.enums.CouponStatus.NOT_USED AND c.expiresAt <= :now THEN 1 ELSE 0 END), 0), " +
             "COALESCE(SUM(CASE WHEN c.status = com.pilotcoupondispatchservice.enums.CouponStatus.NOT_USED AND c.expiresAt > :now AND c.expiresAt <= :soon THEN 1 ELSE 0 END), 0) " +
             "FROM Coupon c WHERE c.owner.id = :ownerId")
-    Object[] ownerCouponStats(@Param("ownerId") Long ownerId, @Param("now") LocalDateTime now, @Param("soon") LocalDateTime soon);
+    List<Object[]> ownerCouponStats(@Param("ownerId") Long ownerId, @Param("now") LocalDateTime now, @Param("soon") LocalDateTime soon);
 
     // Dashboard: one aggregate query for the whole admin coupon stats group.
     // Tuple: [issuedCount, issuedTotalAmount, activeCount, activeTotalAmount, reservedCount, usedCount, usedTotalAmount, expiredCount]
@@ -47,7 +50,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long>, JpaSpecif
             "COALESCE(SUM(CASE WHEN c.status = com.pilotcoupondispatchservice.enums.CouponStatus.USED THEN c.amount ELSE 0.0 END), 0.0), " +
             "COALESCE(SUM(CASE WHEN c.status = com.pilotcoupondispatchservice.enums.CouponStatus.NOT_USED AND c.expiresAt <= :now THEN 1 ELSE 0 END), 0) " +
             "FROM Coupon c")
-    Object[] adminCouponStats(@Param("now") LocalDateTime now);
+    List<Object[]> adminCouponStats(@Param("now") LocalDateTime now);
 
     // Dashboard action-required: ACTIVE coupons (NOT_USED, not yet expired) expiring within the window.
     @Query("SELECT c FROM Coupon c WHERE c.owner.id = :ownerId " +

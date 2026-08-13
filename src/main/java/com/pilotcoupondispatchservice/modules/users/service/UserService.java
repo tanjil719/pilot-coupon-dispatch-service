@@ -6,6 +6,7 @@ import com.pilotcoupondispatchservice.enums.UserType;
 import com.pilotcoupondispatchservice.exceptions.ResourceAlreadyExistException;
 import com.pilotcoupondispatchservice.exceptions.ResourceNotFoundException;
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
+import com.pilotcoupondispatchservice.modules.users.dto.UserProfileResponse;
 import com.pilotcoupondispatchservice.modules.users.dto.UserResponse;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.mapper.UserMapper;
@@ -96,8 +97,8 @@ public class UserService {
     }
 
     @HasPermission(permission = PermissionConstant.READ_USER_PROFILE)
-    public User getUserProfile() {
-        return findByIdOrThrow(SecurityUtil.getLoggedInUserId());
+    public UserProfileResponse getUserProfile() {
+        return UserMapper.toProfileResponse(findByIdOrThrow(SecurityUtil.getLoggedInUserId()));
     }
 
     private User findByIdOrThrow(Long id) {

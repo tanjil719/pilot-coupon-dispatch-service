@@ -2,6 +2,7 @@ package com.pilotcoupondispatchservice.modules.pilots.service;
 
 import com.pilotcoupondispatchservice.annotations.HasPermission;
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
+import com.pilotcoupondispatchservice.enums.BookingStatus;
 import com.pilotcoupondispatchservice.enums.PilotStatus;
 import com.pilotcoupondispatchservice.enums.ScheduleStatus;
 import com.pilotcoupondispatchservice.exceptions.InvalidRequestException;
@@ -64,7 +65,7 @@ public class PilotScheduleServiceImpl implements PilotScheduleService {
 
     @Override
     @HasPermission(permission = PermissionConstant.PILOT_SCHEDULE_VIEW)
-    public Page<PilotScheduleResponse> listSchedules(Long pilotId, Long bookingId, String routeCode, ScheduleStatus status, LocalDateTime from, LocalDateTime to, Pageable pageable) {
+    public Page<PilotScheduleResponse> listSchedules(Long pilotId, Long bookingId, String routeCode, BookingStatus status, LocalDateTime from, LocalDateTime to, Pageable pageable) {
         Specification<PilotSchedule> specification = where(PilotScheduleSpecifications.pilotIdEquals(pilotId))
                 .and(PilotScheduleSpecifications.bookingIdEquals(bookingId))
                 .and(PilotScheduleSpecifications.routeCodeEquals(routeCode))

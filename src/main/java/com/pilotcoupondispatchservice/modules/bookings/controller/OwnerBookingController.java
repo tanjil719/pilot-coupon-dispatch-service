@@ -37,14 +37,14 @@ public class OwnerBookingController {
             @RequestParam(required = false) BookingStatus status,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime to,
-            @RequestParam(required = false) Long vehicleId,
+            @RequestParam(required = false) String registrationNo,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "DESC") Sort.Direction sortDir) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDir, sortBy));
-        Page<BookingResponse> bookings = bookingService.listOwnBookings(status, from, to, vehicleId, pageable);
+        Page<BookingResponse> bookings = bookingService.listOwnBookings(status, from, to, registrationNo, pageable);
         return ResponseEntity.ok(bookings);
     }
 

@@ -27,9 +27,8 @@ public class AdminBookingController {
     @GetMapping
     public ResponseEntity<?> listAllBookings(
             @RequestParam(required = false) BookingStatus status,
-            @RequestParam(required = false) Long ownerId,
-            @RequestParam(required = false) Long routeId,
-            @RequestParam(required = false) Long vehicleId,
+            @RequestParam(required = false) String ownerName,
+            @RequestParam(required = false) String routeCode,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime from,
             @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss") LocalDateTime to,
             @RequestParam(defaultValue = "0") int page,
@@ -38,7 +37,7 @@ public class AdminBookingController {
             @RequestParam(defaultValue = "DESC") Sort.Direction sortDir) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDir, sortBy));
-        Page<BookingAdminResponse> bookings = bookingService.listAllBookings(status, ownerId, routeId, vehicleId, from, to, pageable);
+        Page<BookingAdminResponse> bookings = bookingService.listAllBookings(status, ownerName, routeCode, from, to, pageable);
         return ResponseEntity.ok(bookings);
     }
 
@@ -48,7 +47,7 @@ public class AdminBookingController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{id}/review")
+    @PatchMapping("/review/{id}")
     public ResponseEntity<?> reviewBooking(@PathVariable Long id, @Valid @RequestBody BookingReviewRequest request) {
         BookingAdminResponse response = bookingService.reviewBooking(id, request);
         return ResponseEntity.ok(response);

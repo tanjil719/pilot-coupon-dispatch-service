@@ -20,6 +20,7 @@ public class CouponResponse implements Serializable {
     private String code;
     private Double amount;
     private CouponStatus status;
+    private String cancelReason;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime expiresAt;
