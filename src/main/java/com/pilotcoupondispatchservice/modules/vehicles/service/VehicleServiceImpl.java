@@ -43,7 +43,7 @@ public class VehicleServiceImpl implements VehicleService {
         String registrationNo = normalizeRegistrationNo(request.getRegistrationNo());
 
         if (vehicleRepository.existsByRegistrationNoIgnoreCase(registrationNo)) {
-            throw new ResourceAlreadyExistException("Vehicle already exists with registration no: '" + registrationNo + "'");
+            throw new ResourceAlreadyExistException("Vehicle already exists with registration no: " + registrationNo);
         }
 
         Long ownerId = SecurityUtil.getLoggedInUserId();
@@ -98,7 +98,7 @@ public class VehicleServiceImpl implements VehicleService {
         String registrationNo = normalizeRegistrationNo(request.getRegistrationNo());
         if (!registrationNo.equalsIgnoreCase(vehicle.getRegistrationNo())
                 && vehicleRepository.existsByRegistrationNoIgnoreCaseAndIdNot(registrationNo, id)) {
-            throw new ResourceAlreadyExistException("Vehicle already exists with registration no: '" + registrationNo + "'");
+            throw new ResourceAlreadyExistException("Vehicle already exists with registration no: " + registrationNo);
         }
 
         vehicle.setName(request.getName());
@@ -194,17 +194,17 @@ public class VehicleServiceImpl implements VehicleService {
     private Vehicle findByIdAndOwnerId(Long id) {
         Long ownerId = SecurityUtil.getLoggedInUserId();
         return vehicleRepository.findByIdAndOwnerId(id, ownerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: '" + id + "'"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
     }
 
     private Vehicle findByIdOrThrow(Long id) {
         return vehicleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: '" + id + "'"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
     }
 
     private Vehicle findByIdWithOwnerOrThrow(Long id) {
         return vehicleRepository.findWithOwnerById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: '" + id + "'"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + id));
     }
 
     private String normalizeRegistrationNo(String registrationNo) {
