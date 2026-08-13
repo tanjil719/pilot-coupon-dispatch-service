@@ -18,6 +18,9 @@ public interface CouponRequestRepository extends JpaRepository<CouponRequest, Lo
 
     Optional<CouponRequest> findByIdAndOwnerId(Long id, Long ownerId);
 
+    @Query("SELECT cr FROM CouponRequest cr JOIN FETCH cr.owner WHERE cr.id = :id")
+    Optional<CouponRequest> findByIdWithOwner(@Param("id") Long id);
+
     boolean existsByOwnerIdAndRouteCodeIgnoreCaseAndStatusAndServiceStartAfter(Long ownerId, String routeCode, CouponRequestStatus status, java.time.LocalDateTime serviceStart);
 
     boolean existsByOwnerIdAndRouteCodeIgnoreCaseAndStatusAndServiceStart(

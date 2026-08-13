@@ -6,6 +6,7 @@ import com.pilotcoupondispatchservice.enums.CouponRequestStatus;
 import com.pilotcoupondispatchservice.enums.CouponStatus;
 import com.pilotcoupondispatchservice.enums.UserType;
 import com.pilotcoupondispatchservice.exceptions.InvalidRequestException;
+import com.pilotcoupondispatchservice.exceptions.ResourceAlreadyExistException;
 import com.pilotcoupondispatchservice.exceptions.ResourceNotFoundException;
 import com.pilotcoupondispatchservice.modules.coupons.dto.CouponAdminResponse;
 import com.pilotcoupondispatchservice.modules.coupons.dto.CouponCancelRequest;
@@ -29,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -85,7 +87,7 @@ public class CouponServiceImpl implements CouponService {
         LocalDateTime expiresAt = issuedAt.plusDays(request.getValidityDays() != null ? request.getValidityDays() : DEFAULT_VALIDITY_DAYS);
 
         Coupon coupon = new Coupon();
-        coupon.setCode(couponCodeGenerator.generateCouponCode());
+        coupon.setCode(resolveCouponCode(request.getCouponCode()));
         coupon.setOwner(couponRequest.getOwner());
         coupon.setAmount(amount);
         coupon.setStatus(CouponStatus.NOT_USED);
@@ -95,6 +97,7 @@ public class CouponServiceImpl implements CouponService {
         Coupon savedCoupon = couponRepository.save(coupon);
 
         couponRequest.setStatus(CouponRequestStatus.APPROVED);
+        couponRequest.setCoupon(savedCoupon.getCode());
         couponRequest.setReviewedAt(issuedAt);
         couponRequestRepository.save(couponRequest);
 
@@ -175,5 +178,17 @@ public class CouponServiceImpl implements CouponService {
     private Coupon findByIdOrThrow(Long id) {
         return couponRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Coupon not found with id: " + id));
+    }
+
+    private String resolveCouponCode(String requestedCode) {
+        if (!StringUtils.hasText(requestedCode)) {
+            return couponCodeGenerator.generateCouponCode();
+        }
+
+        String code = requestedCode.trim().toUpperCase();
+        if (couponRepository.existsByCode(code)) {
+            throw new ResourceAlreadyExistException("Coupon code already exists: " + code);
+        }
+        return code;
     }
 }

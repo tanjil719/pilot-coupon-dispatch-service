@@ -115,13 +115,14 @@ public class CouponRequestServiceImpl implements CouponRequestService {
     @Override
     @HasPermission(permission = PermissionConstant.COUPON_REQUEST_VIEW_ALL)
     public Page<CouponRequestAdminResponse> listAllRequests(CouponRequestStatus status, Long ownerId, String routeCode, LocalDateTime from, LocalDateTime to, String search, Pageable pageable) {
-//        CouponRequestStatus effectiveStatus = status == null ? CouponRequestStatus.PENDING : status;
 
         Specification<CouponRequest> specification = where(CouponRequestSpecifications.statusEquals(status))
                 .and(CouponRequestSpecifications.ownerIdEquals(ownerId))
                 .and(CouponRequestSpecifications.routeCodeEquals(routeCode))
                 .and(CouponRequestSpecifications.createdAtFrom(from))
-                .and(CouponRequestSpecifications.createdAtTo(to));
+                .and(CouponRequestSpecifications.createdAtTo(to))
+                .and(CouponRequestSpecifications.ownerSearch(search))
+                .and(CouponRequestSpecifications.fetchOwner());
 
         Page<CouponRequest> page = couponRequestRepository.findAll(specification, pageable);
 
@@ -137,6 +138,7 @@ public class CouponRequestServiceImpl implements CouponRequestService {
 
     @Override
     @HasPermission(permission = PermissionConstant.COUPON_REQUEST_REJECT)
+    @Transactional
     public CouponRequestAdminResponse rejectRequest(Long id, CouponRequestRejectRequest request) {
         CouponRequest couponRequest = findByIdOrThrow(id);
 
@@ -157,11 +159,11 @@ public class CouponRequestServiceImpl implements CouponRequestService {
     private CouponRequest findByIdAndOwnerId(Long id) {
         Long ownerId = SecurityUtil.getLoggedInUserId();
         return couponRequestRepository.findByIdAndOwnerId(id, ownerId)
-                .orElseThrow(() -> new ResourceNotFoundException("COUPON_REQUEST_NOT_FOUND: Coupon request not found with id: '" + id + "'"));
+                .orElseThrow(() -> new ResourceNotFoundException("Coupon request not found with id: '" + id));
     }
 
     private CouponRequest findByIdOrThrow(Long id) {
-        return couponRequestRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("COUPON_REQUEST_NOT_FOUND: Coupon request not found with id: '" + id + "'"));
+        return couponRequestRepository.findByIdWithOwner(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Coupon request not found with id: '" + id));
     }
 }

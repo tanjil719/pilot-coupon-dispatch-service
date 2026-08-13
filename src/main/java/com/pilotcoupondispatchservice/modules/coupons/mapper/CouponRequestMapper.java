@@ -34,6 +34,7 @@ public final class CouponRequestMapper {
         response.setStatus(request.getStatus());
         response.setRejectionReason(request.getRejectionReason());
         response.setCreatedAt(request.getCreatedAt());
+        response.setCouponCode(request.getCoupon());
 
         User owner = request.getOwner();
         response.setOwnerId(owner.getId());

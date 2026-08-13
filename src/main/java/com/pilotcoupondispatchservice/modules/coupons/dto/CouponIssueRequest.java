@@ -28,4 +28,7 @@ public class CouponIssueRequest {
 
     @Size(max = 500, message = "Note must not exceed 500 characters")
     private String note;
+
+    @Size(max = 30, message = "Coupon code must not exceed 30 characters")
+    private String couponCode;
 }

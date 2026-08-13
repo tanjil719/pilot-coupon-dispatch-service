@@ -61,6 +61,8 @@ public class CouponRequest implements Serializable {
     @Column(name = "reviewed_at")
     private LocalDateTime reviewedAt;
 
+    private String coupon;
+
     @JsonProperty(access = READ_ONLY)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(nullable = false, updatable = false)
