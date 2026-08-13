@@ -143,6 +143,13 @@ public class UserService {
     }
 
     @Transactional
+    public void resetPasswordByEmail(String email, String newPassword) {
+        User user = findByEmail(email);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Transactional
     public User createUserDirect(User user) {
         return userRepository.save(user);
     }

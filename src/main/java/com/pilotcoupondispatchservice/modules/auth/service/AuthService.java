@@ -3,12 +3,16 @@ package com.pilotcoupondispatchservice.modules.auth.service;
 import com.pilotcoupondispatchservice.dao.EmailSenderService;
 import com.pilotcoupondispatchservice.enums.UserType;
 import com.pilotcoupondispatchservice.exceptions.InvalidAuthenticationException;
+import com.pilotcoupondispatchservice.modules.auth.dto.ForgotPasswordRequest;
 import com.pilotcoupondispatchservice.modules.auth.dto.OtpResponse;
 import com.pilotcoupondispatchservice.modules.auth.dto.OtpVerificationRequest;
 import com.pilotcoupondispatchservice.modules.auth.dto.OwnerSignupRequest;
+import com.pilotcoupondispatchservice.modules.auth.dto.ResetPasswordRequest;
 import com.pilotcoupondispatchservice.modules.auth.dto.TokenPairResponse;
 import com.pilotcoupondispatchservice.modules.auth.entity.OtpVerification;
+import com.pilotcoupondispatchservice.modules.auth.entity.PasswordResetOtp;
 import com.pilotcoupondispatchservice.modules.auth.repository.OtpVerificationRepository;
+import com.pilotcoupondispatchservice.modules.auth.repository.PasswordResetOtpRepository;
 import com.pilotcoupondispatchservice.modules.roles.repository.RoleRepository;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.service.UserService;
@@ -36,6 +40,7 @@ public class AuthService {
     private final EmailSenderService emailSenderService;
     private final RoleRepository roleRepository;
     private final OtpVerificationRepository otpVerificationRepository;
+    private final PasswordResetOtpRepository passwordResetOtpRepository;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
@@ -172,6 +177,45 @@ public class AuthService {
         return new LoginResponse(tokenPair);
     }
 
+    @Transactional
+    public OtpResponse requestPasswordReset(ForgotPasswordRequest request) {
+        userService.findByEmail(request.getEmail());
+
+        passwordResetOtpRepository.deleteByEmail(request.getEmail());
+
+        String otp = generateOtp();
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES);
+
+        PasswordResetOtp passwordResetOtp = new PasswordResetOtp();
+        passwordResetOtp.setEmail(request.getEmail());
+        passwordResetOtp.setOtp(otp);
+        passwordResetOtp.setExpiryTime(expiryTime);
+        passwordResetOtp.setIsVerified(false);
+
+        passwordResetOtpRepository.save(passwordResetOtp);
+
+        sendPasswordResetOtpEmail(request.getEmail(), otp);
+
+        return new OtpResponse("OTP sent to email", request.getEmail(), "PENDING");
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        PasswordResetOtp passwordResetOtp = passwordResetOtpRepository
+                .findByEmailAndOtpAndIsVerifiedFalse(request.getEmail(), request.getOtp())
+                .orElseThrow(() -> new InvalidAuthenticationException("Invalid OTP or email"));
+
+        if (LocalDateTime.now().isAfter(passwordResetOtp.getExpiryTime())) {
+            passwordResetOtpRepository.delete(passwordResetOtp);
+            throw new InvalidAuthenticationException("OTP has expired");
+        }
+
+        userService.resetPasswordByEmail(request.getEmail(), request.getNewPassword());
+
+        passwordResetOtp.setIsVerified(true);
+        passwordResetOtpRepository.save(passwordResetOtp);
+    }
+
     private String generateOtp() {
         return String.format("%06d", new Random().nextInt(999999));
     }
@@ -182,6 +226,18 @@ public class AuthService {
         message.setTo(email);
         message.setSubject("Owner Signup OTP");
         message.setText("Your OTP for Owner signup is: " + otp + "\n\n" +
+                "This OTP will expire in " + OTP_EXPIRY_MINUTES + " minutes.\n\n" +
+                "If you didn't request this, please ignore this email.");
+
+        emailSenderService.sendEmailNotificationAsync(message);
+    }
+
+    private void sendPasswordResetOtpEmail(String email, String otp) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(email);
+        message.setSubject("Password Reset OTP");
+        message.setText("Your OTP for password reset is: " + otp + "\n\n" +
                 "This OTP will expire in " + OTP_EXPIRY_MINUTES + " minutes.\n\n" +
                 "If you didn't request this, please ignore this email.");
 
