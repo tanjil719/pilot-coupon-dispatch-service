@@ -2,10 +2,13 @@ package com.pilotcoupondispatchservice.modules.users.service;
 
 import com.pilotcoupondispatchservice.annotations.HasPermission;
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
+import com.pilotcoupondispatchservice.enums.UserType;
 import com.pilotcoupondispatchservice.exceptions.ResourceAlreadyExistException;
 import com.pilotcoupondispatchservice.exceptions.ResourceNotFoundException;
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
+import com.pilotcoupondispatchservice.modules.users.dto.UserResponse;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
+import com.pilotcoupondispatchservice.modules.users.mapper.UserMapper;
 import com.pilotcoupondispatchservice.modules.users.repository.UserRepository;
 import com.pilotcoupondispatchservice.utils.SecurityUtil;
 import lombok.AllArgsConstructor;
@@ -23,14 +26,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @HasPermission(permission = PermissionConstant.READ_USER)
-    public Page<User> searchUser(String name, Pageable pageable) {
-        return userRepository.findAllByNameContainingIgnoreCase(name, pageable);
+    public Page<UserResponse> searchUser(String name, Pageable pageable) {
+        return userRepository.findAllByNameContainingIgnoreCaseAndUserType(name, UserType.OWNER, pageable)
+                .map(UserMapper::toResponse);
     }
 
     @HasPermission(permission = PermissionConstant.READ_USER)
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    public UserResponse getUserById(Long id) {
+        return UserMapper.toResponse(findByIdOrThrow(id));
     }
 
 //    @HasPermission(permission = PermissionConstant.CREATE_USER)
@@ -73,25 +76,20 @@ public class UserService {
 //            }
 //            user.setPhone(userDTO.getPhone());
 //
-////            user.setRole(userDTO.getRole());
-//            user.setIsActive(userDTO.getIsActive());
-//
-//            return userRepository.save(user);
-//        }).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
-//    }
 
-    @HasPermission(permission = PermissionConstant.DELETE_USER)
-    public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResourceNotFoundException("User", "id", id);
-        }
-        userRepository.deleteById(id);
+    @HasPermission(permission = PermissionConstant.MODIFY_USER)
+    public boolean activeDeactiveUser(Long id, Boolean active) {
+
+        User user = findByIdOrThrow(id);
+        user.setIsActive(active);
+        userRepository.save(user);
+
+        return true;
     }
 
     @HasPermission(permission = PermissionConstant.UPDATE_USER_PROFILE_PASSWORD)
     public void updateUserPassword(Long id, String newPassword) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        User user = findByIdOrThrow(id);
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
@@ -99,7 +97,12 @@ public class UserService {
 
     @HasPermission(permission = PermissionConstant.READ_USER_PROFILE)
     public User getUserProfile() {
-        return getUserById(SecurityUtil.getLoggedInUserId());
+        return findByIdOrThrow(SecurityUtil.getLoggedInUserId());
+    }
+
+    private User findByIdOrThrow(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }
 
     @HasPermission(permission = PermissionConstant.MODIFY_USER_PROFILE)

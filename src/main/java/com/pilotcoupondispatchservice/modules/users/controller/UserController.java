@@ -1,6 +1,7 @@
 package com.pilotcoupondispatchservice.modules.users.controller;
 
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
+import com.pilotcoupondispatchservice.modules.users.dto.UserResponse;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.service.UserService;
 import lombok.AllArgsConstructor;
@@ -24,19 +25,19 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = userService.searchUser(name, pageable);
+        Page<UserResponse> users = userService.searchUser(name, pageable);
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/by-id/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
+        UserResponse user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @PatchMapping("/active-deactive/{id}")
+    public ResponseEntity<?> activeDeactiveUser(@PathVariable Long id, @RequestParam Boolean active) {
+        userService.activeDeactiveUser(id, active);
         return ResponseEntity.noContent().build();
     }
 
