@@ -57,9 +57,27 @@ public class AuthService {
         return new TokenPairResponse(accessToken, nextRefreshToken, "Bearer");
     }
 
-    public LoginResponse login(LoginRequest request) {
+    public LoginResponse ownerLogin(LoginRequest request) {
         User user = userService.findByEmail(request.getUsername());
 
+        if (user.getUserType() != UserType.OWNER) {
+            throw new InvalidAuthenticationException("Invalid email or password");
+        }
+
+        return authenticate(request, user);
+    }
+
+    public LoginResponse adminLogin(LoginRequest request) {
+        User user = userService.findByEmail(request.getUsername());
+
+        if (user.getUserType() != UserType.ADMIN) {
+            throw new InvalidAuthenticationException("Invalid email or password");
+        }
+
+        return authenticate(request, user);
+    }
+
+    private LoginResponse authenticate(LoginRequest request, User user) {
         if (!user.getIsActive()) {
             throw new InvalidAuthenticationException("User account is inactive");
         }

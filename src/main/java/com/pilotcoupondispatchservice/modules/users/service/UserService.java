@@ -2,6 +2,8 @@ package com.pilotcoupondispatchservice.modules.users.service;
 
 import com.pilotcoupondispatchservice.annotations.HasPermission;
 import com.pilotcoupondispatchservice.constants.PermissionConstant;
+import com.pilotcoupondispatchservice.exceptions.ResourceAlreadyExistException;
+import com.pilotcoupondispatchservice.exceptions.ResourceNotFoundException;
 import com.pilotcoupondispatchservice.modules.users.dto.UserDTO;
 import com.pilotcoupondispatchservice.modules.users.entity.User;
 import com.pilotcoupondispatchservice.modules.users.repository.UserRepository;
@@ -28,7 +30,7 @@ public class UserService {
     @HasPermission(permission = PermissionConstant.READ_USER)
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }
 
 //    @HasPermission(permission = PermissionConstant.CREATE_USER)
@@ -81,7 +83,7 @@ public class UserService {
     @HasPermission(permission = PermissionConstant.DELETE_USER)
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found with id: " + id);
+            throw new ResourceNotFoundException("User", "id", id);
         }
         userRepository.deleteById(id);
     }
@@ -89,7 +91,7 @@ public class UserService {
     @HasPermission(permission = PermissionConstant.UPDATE_USER_PROFILE_PASSWORD)
     public void updateUserPassword(Long id, String newPassword) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
@@ -107,29 +109,29 @@ public class UserService {
 
             if (!user.getEmail().equals(userDTO.getEmail()) &&
                     userRepository.existsByEmail(userDTO.getEmail())) {
-                throw new RuntimeException("User with email already exists: " + userDTO.getEmail());
+                throw new ResourceAlreadyExistException("User", "email", userDTO.getEmail());
             }
             user.setEmail(userDTO.getEmail());
 
             if (!user.getPhone().equals(userDTO.getPhone()) &&
                     userRepository.existsByPhone(userDTO.getPhone())) {
-                throw new RuntimeException("User with phone already exists: " + userDTO.getPhone());
+                throw new ResourceAlreadyExistException("User", "phone", userDTO.getPhone());
             }
             user.setPhone(userDTO.getPhone());
 
             return userRepository.save(user);
-        }).orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        }).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
     }
 
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
     }
 
     public User findByPhone(String phone) {
         return userRepository.findByPhone(phone)
-                .orElseThrow(() -> new RuntimeException("User not found with phone: " + phone));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "phone", phone));
     }
 
     public java.util.Optional<User> findByEmailOptional(String email) {

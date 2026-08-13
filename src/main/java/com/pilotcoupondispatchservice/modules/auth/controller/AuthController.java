@@ -18,9 +18,15 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("${url.base}/public/auth/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-        LoginResponse response = authService.login(request);
+    @PostMapping("${url.base}/public/auth/owner/login")
+    public ResponseEntity<?> ownerLogin(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = authService.ownerLogin(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("${url.base}/public/auth/admin/login")
+    public ResponseEntity<?> adminLogin(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = authService.adminLogin(request);
         return ResponseEntity.ok(response);
     }
 
